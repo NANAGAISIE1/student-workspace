@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Nana-Gaisie-s-workspace-397sl2.us-east-1.xata.sh/db/student-workspace",
+  "codegen": {
+    "output": "src/db/xata.ts"
+  }
+}

@@ -1,0 +1,187 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Inter";
+  src: url("../font/Inter.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Geist";
+  src: url("../font/GeistVF.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("../font/GeistMonoVF.woff2") format("woff2");
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 3%;
+    --radius: 0.1875rem;
+    --chart-1: 203 82% 76%;
+    --chart-2: 172 66% 50%;
+    --chart-3: 0 69% 50%;
+    --chart-4: 47 80% 52%;
+    --chart-5: 269 56% 62%;
+    --radius: 0.5rem;
+
+    /* New variables for danger, warning, success */
+    --danger: 0 72% 51%;
+    --danger-foreground: 0 0% 100%;
+    --warning: 38 95% 64%;
+    --warning-foreground: 0 0% 10%;
+    --success: 145 50% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* New variables for background shades */
+    --background-light: 0 0% 98%;
+    --background-lighter: 0 0% 96%;
+    --background-dark: 0 0% 93%;
+    --background-darker: 0 0% 90%;
+
+    /* Vibrant, playful colors */
+    --vibrant-blue: 217 91% 60%;
+    --vibrant-purple: 270 91% 65%;
+    --vibrant-pink: 330 95% 70%;
+    --vibrant-red: 0 91% 63%;
+    --vibrant-orange: 24 95% 65%;
+    --vibrant-yellow: 45 93% 58%;
+    --vibrant-green: 142 69% 58%;
+    --vibrant-teal: 173 80% 40%;
+
+    /* Pastel versions for softer emphasis */
+    --pastel-blue: 217 91% 80%;
+    --pastel-purple: 270 91% 85%;
+    --pastel-pink: 330 95% 85%;
+    --pastel-red: 0 91% 83%;
+    --pastel-orange: 24 95% 85%;
+    --pastel-yellow: 45 93% 78%;
+    --pastel-green: 142 69% 78%;
+    --pastel-teal: 173 80% 70%;
+
+    --font-body: "Inter", sans-serif;
+    --font-geist: "Geist", sans-serif;
+    --font-mono: "Geist Mono", monospace;
+  }
+
+  .dark {
+    --background: 0 0% 11%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 11%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 11%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 63%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 83%;
+    --chart-1: 203 82% 76%;
+    --chart-2: 172 66% 50%;
+    --chart-3: 0 69% 50%;
+    --chart-4: 47 80% 52%;
+    --chart-5: 269 56% 62%;
+
+    /* New variables for danger, warning, success */
+    --danger: 0 72% 51%;
+    --danger-foreground: 0 0% 100%;
+    --warning: 38 95% 64%;
+    --warning-foreground: 0 0% 10%;
+    --success: 145 50% 45%;
+    --success-foreground: 0 0% 100%;
+
+    /* New variables for background shades */
+    --background-light: 0 0% 13%;
+    --background-lighter: 0 0% 15%;
+    --background-dark: 0 0% 9%;
+    --background-darker: 0 0% 7%;
+
+    /* Adjust vibrant colors for dark mode if needed */
+    --vibrant-blue: 217 91% 65%;
+    --vibrant-purple: 270 91% 70%;
+    --vibrant-pink: 330 95% 75%;
+    --vibrant-red: 0 91% 68%;
+    --vibrant-orange: 24 95% 70%;
+    --vibrant-yellow: 45 93% 63%;
+    --vibrant-green: 142 69% 63%;
+    --vibrant-teal: 173 80% 45%;
+
+    /* Pastel versions for dark mode */
+    --pastel-blue: 217 70% 60%;
+    --pastel-purple: 270 70% 65%;
+    --pastel-pink: 330 75% 70%;
+    --pastel-red: 0 70% 63%;
+    --pastel-orange: 24 75% 65%;
+    --pastel-yellow: 45 73% 58%;
+    --pastel-green: 142 49% 58%;
+    --pastel-teal: 173 60% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background-dark text-foreground font-body;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+  h1 {
+    @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
+  }
+  h2 {
+    @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+  }
+  h3 {
+    @apply scroll-m-20 text-2xl font-semibold tracking-tight;
+  }
+  h4 {
+    @apply scroll-m-20 text-xl font-semibold tracking-tight;
+  }
+  p {
+    @apply leading-7 [&:not(:first-child)]:mt-6;
+  }
+  blockquote {
+    @apply mt-6 border-l-2 pl-6 italic;
+  }
+  ul {
+    @apply my-6 ml-6 list-disc;
+  }
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold font-mono;
+  }
+}
