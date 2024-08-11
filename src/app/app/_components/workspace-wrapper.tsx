@@ -2,7 +2,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useSidebarStore } from "./sidebar/use-sidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 const WorkspaceWrapper = ({ children }: { children: React.ReactNode }) => {
   const { isSidebarOpen } = useSidebarStore((state) => state);
@@ -21,9 +20,7 @@ const WorkspaceWrapper = ({ children }: { children: React.ReactNode }) => {
         damping: 40,
       }}
     >
-      <ScrollArea className="w-full flex flex-col h-full space-y-3">
-        {children}
-      </ScrollArea>
+      {children}
     </motion.main>
   );
 };
