@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 import { getUserByEmail } from "../db/utils";
 import { loginFormSchema } from "../app/(auth)/_components/schemas";
 import Credentials from "next-auth/providers/credentials";
