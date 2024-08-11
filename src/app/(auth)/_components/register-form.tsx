@@ -56,6 +56,7 @@ export function SignupForm() {
 
     // User created now show input form for email verification
     // If data, show verification input form
+    route.push("/login");
   }
   return (
     <Card className="mx-auto max-w-sm">

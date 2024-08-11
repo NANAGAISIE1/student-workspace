@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,25 +21,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginFormSchema } from "./schemas";
 import { z } from "zod";
-import { ErrorType } from "./register-form";
 import { Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { login } from "@/actions/login";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function LoginForm() {
-  // Get error message added by next/auth in URL.
-  const searchParams = useSearchParams();
-  const error = searchParams?.get("error");
-
-  useEffect(() => {
-    const errorMessage = Array.isArray(error) ? error.pop() : error;
-    errorMessage && toast.error(errorMessage);
-  }, [error]);
-
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -51,13 +38,18 @@ export function LoginForm() {
   });
 
   async function onSubmitLoginForm(values: z.infer<typeof loginFormSchema>) {
-    try {
-      const data = await login(values);
-      console.log(data);
-    } catch (error) {
-      loginForm.setError("password", {
-        message: (error as ErrorType).message,
-      });
+    const [_, error] = await login(values);
+    if (error) {
+      if (error.code === "NOT_AUTHORIZED") {
+        loginForm.setError("password", {
+          message: error.message,
+        });
+      }
+
+      if (error.code === "ERROR") {
+        toast.error(error.message);
+      }
+      return;
     }
   }
 
@@ -109,26 +101,26 @@ export function LoginForm() {
           </CardContent>
           <CardFooter className="w-full flex flex-col gap-4">
             <Button
+              type="submit"
+              className="w-full"
+              disabled={loginForm.formState.isSubmitting}
+            >
+              {loginForm.formState.isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  <p className="!mt-0">Logging you in</p>
+                </>
+              ) : (
+                <p>Login</p>
+              )}
+            </Button>
+            <Button
               variant="outline"
               className="w-full"
               type="button"
               onClick={() => signIn("google")}
             >
               Login with Google
-            </Button>
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loginForm.formState.isLoading}
-            >
-              {loginForm.formState.isLoading ? (
-                <>
-                  <Loader2 className="animate-spin" />
-                  <p className="!mt-0">Logging you in</p>
-                </>
-              ) : (
-                <p className="!mt-0">Login</p>
-              )}
             </Button>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
