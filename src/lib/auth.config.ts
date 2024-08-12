@@ -4,6 +4,8 @@ import { loginFormSchema } from "../app/(auth)/_components/schemas";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { compare } from "bcryptjs";
+import { NextAuthConfig } from "next-auth";
+import { client } from "@/db";
 
 const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 export default {
@@ -43,4 +45,25 @@ export default {
       },
     }),
   ],
-};
+  callbacks: {
+    async session({ token, session }) {
+      if (token.sub && session.user) {
+        session.user.id = token.sub;
+        const documents = await client.db.documents
+          .filter({
+            "user.id": token.sub,
+          })
+          .getAll();
+        if (documents.length === 0) {
+          session.user.newUser = true;
+        } else {
+          session.user.newUser = false;
+        }
+      }
+      return session;
+    },
+    async jwt({ token }) {
+      return token;
+    },
+  },
+} satisfies NextAuthConfig;

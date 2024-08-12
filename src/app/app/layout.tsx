@@ -2,6 +2,7 @@ import Sidebar from "./_components/sidebar";
 import WorkspaceHeader from "./_components/header";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceWrapper from "./_components/workspace-wrapper";
+import SearchDialog from "./_components/dialogs/search-command-dialog";
 
 type Props = {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ const DashboardPage = async ({ children }: Props) => {
         <WorkspaceHeader />
         <Separator />
         <WorkspaceWrapper>{children}</WorkspaceWrapper>
+        <SearchDialog />
       </div>
     </main>
   );

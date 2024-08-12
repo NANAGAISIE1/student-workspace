@@ -24,6 +24,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toolbar": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@tanstack/react-query": "^5.51.23",
     "@udecode/cn": "^33.0.0",
     "@udecode/plate": "^36.3.6",
     "@udecode/plate-alignment": "^36.0.11",

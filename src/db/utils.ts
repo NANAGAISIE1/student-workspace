@@ -1,5 +1,3 @@
-"use server";
-
 import { saltAndHashPassword } from "@/lib/password";
 import { client } from ".";
 
@@ -36,6 +34,7 @@ export async function getUserByEmail({ email }: { email: string }) {
     return null;
   }
 }
+
 export async function getUserById({ id }: { id: string }) {
   try {
     const user = await client.db.nextauth_users.filter({ id }).getFirst();

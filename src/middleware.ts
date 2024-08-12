@@ -17,6 +17,7 @@ export default auth(async (req) => {
   const isApiAuthRoute = url.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(url.pathname);
   const isAuthRoute = authRoutes.includes(url.pathname);
+  const isNewUser = req.auth?.user.newUser;
 
   if (isApiAuthRoute) {
     return NextResponse.next();
@@ -24,7 +25,11 @@ export default auth(async (req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
+      if (isNewUser) {
+        return NextResponse.redirect(new URL("/onboarding", req.url));
+      } else {
+        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
+      }
     }
     return NextResponse.next();
   }
@@ -34,39 +39,6 @@ export default auth(async (req) => {
   }
 
   return NextResponse.next();
-
-  // let hostname = req.headers
-  //   .get("host")!
-  //   .replace(".localhost:3000", `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
-
-  // const searchParams = req.nextUrl.searchParams.toString();
-  // // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-  // const path = `${url.pathname}${
-  //   searchParams.length > 0 ? `?${searchParams}` : ""
-  // }`;
-
-  // // rewrite root application to `/home` folder
-  // if (
-  //   hostname === "localhost:3000" ||
-  //   hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
-  // ) {
-  //   return NextResponse.rewrite(
-  //     new URL(`/home${path === "/" ? "" : path}`, req.url),
-  //   );
-  // }
-
-  // // rewrites for app pages
-  // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-  //   const session = !!req.auth;
-  //   if (!session && path !== "/login") {
-  //     return NextResponse.redirect(new URL("/login", req.url));
-  //   } else if (session && path == "/login") {
-  //     return NextResponse.redirect(new URL("/", req.url));
-  //   }
-  //   return NextResponse.rewrite(
-  //     new URL(`/app${path === "/" ? "" : path}`, req.url),
-  //   );
-  // }
 });
 
 export const config = {

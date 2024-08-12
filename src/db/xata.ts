@@ -21,6 +21,7 @@ const tables = [
       { column: "user", table: "nextauth_users_accounts" },
       { column: "user", table: "nextauth_users_sessions" },
       { column: "user", table: "nextauth_sessions" },
+      { column: "user", table: "documents" },
     ],
   },
   {
@@ -71,6 +72,14 @@ const tables = [
     ],
     revLinks: [{ column: "session", table: "nextauth_users_sessions" }],
   },
+  {
+    name: "documents",
+    columns: [
+      { name: "user", type: "link", link: { table: "nextauth_users" } },
+      { name: "content", type: "json" },
+      { name: "title", type: "text", notNull: true, defaultValue: "Untitled" },
+    ],
+  },
 ] as const;
 
 export type SchemaTables = typeof tables;
@@ -96,6 +105,9 @@ export type NextauthUsersSessionsRecord = NextauthUsersSessions & XataRecord;
 export type NextauthSessions = InferredTypes["nextauth_sessions"];
 export type NextauthSessionsRecord = NextauthSessions & XataRecord;
 
+export type Documents = InferredTypes["documents"];
+export type DocumentsRecord = Documents & XataRecord;
+
 export type DatabaseSchema = {
   nextauth_users: NextauthUsersRecord;
   nextauth_accounts: NextauthAccountsRecord;
@@ -103,6 +115,7 @@ export type DatabaseSchema = {
   nextauth_users_accounts: NextauthUsersAccountsRecord;
   nextauth_users_sessions: NextauthUsersSessionsRecord;
   nextauth_sessions: NextauthSessionsRecord;
+  documents: DocumentsRecord;
 };
 
 const DatabaseClient = buildClient();
