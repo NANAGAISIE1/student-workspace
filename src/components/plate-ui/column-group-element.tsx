@@ -1,35 +1,35 @@
-import React from 'react';
+import React from "react";
 
-import { cn, withRef } from '@udecode/cn';
+import { cn, withRef } from "@udecode/cn";
 import {
   PlateElement,
   useElement,
   useRemoveNodeButton,
-} from '@udecode/plate-common';
+} from "@udecode/plate-common";
 import {
   ELEMENT_COLUMN,
   type TColumnElement,
   useColumnState,
   useDebouncePopoverOpen,
-} from '@udecode/plate-layout';
-import { useReadOnly } from 'slate-react';
+} from "@udecode/plate-layout";
+import { useReadOnly } from "slate-react";
 
-import { Icons } from '@/components/icons';
+import { Icons } from "@/components/icons";
 
-import { Button } from './button';
-import { Popover, PopoverAnchor, PopoverContent } from './popover';
-import { Separator } from './separator';
+import { Button } from "./button";
+import { Popover, PopoverAnchor, PopoverContent } from "./popover";
+import { Separator } from "./separator";
 
 export const ColumnGroupElement = withRef<typeof PlateElement>(
   ({ children, className, ...props }, ref) => {
     return (
-      <PlateElement className={cn(className, 'my-2')} ref={ref} {...props}>
+      <PlateElement className={cn(className, "my-2")} ref={ref} {...props}>
         <ColumnFloatingToolbar>
-          <div className={cn('flex size-full gap-4 rounded')}>{children}</div>
+          <div className={cn("flex size-full gap-4 rounded")}>{children}</div>
         </ColumnFloatingToolbar>
       </PlateElement>
     );
-  }
+  },
 );
 
 export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
@@ -62,7 +62,7 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
         sideOffset={10}
       >
         <div className="box-content flex h-9 items-center gap-1 [&_svg]:size-4 [&_svg]:text-muted-foreground">
-          <Button onClick={setDoubleColumn} size="sms" variant="ghost">
+          {/* <Button onClick={setDoubleColumn} size="sms" variant="ghost">
             <Icons.doubleColumn />
           </Button>
           <Button onClick={setThreeColumn} size="sms" variant="ghost">
@@ -80,7 +80,7 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
             variant="ghost"
           >
             <Icons.doubleSideDoubleColumn />
-          </Button>
+          </Button> */}
 
           <Separator className="my-1" orientation="vertical" />
           <Button size="sms" variant="ghost" {...buttonProps}>
