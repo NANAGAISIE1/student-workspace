@@ -1,45 +1,47 @@
-import { NextResponse } from "next/server";
+// import { NextResponse } from "next/server";
 import NextAuth from "next-auth";
 import authConfig from "./lib/auth.config";
-import {
-  apiAuthPrefix,
-  authRoutes,
-  DEFAULT_LOGIN_REDIRECT,
-  publicRoutes,
-} from "./routes";
+// import {
+//   apiAuthPrefix,
+//   authRoutes,
+//   DEFAULT_LOGIN_REDIRECT,
+//   publicRoutes,
+// } from "./routes";
+
+export { auth as middleware } from "@/lib/auth";
 
 const { auth } = NextAuth(authConfig);
 
-export default auth(async (req) => {
-  const url = req.nextUrl;
-  const isLoggedIn = !!req.auth;
+// export default auth(async (req) => {
+//   const url = req.nextUrl;
+//   const isLoggedIn = !!req.auth;
 
-  const isApiAuthRoute = url.pathname.startsWith(apiAuthPrefix);
-  const isPublicRoute = publicRoutes.includes(url.pathname);
-  const isAuthRoute = authRoutes.includes(url.pathname);
-  const isNewUser = req.auth?.user.newUser;
+//   const isApiAuthRoute = url.pathname.startsWith(apiAuthPrefix);
+//   const isPublicRoute = publicRoutes.includes(url.pathname);
+//   const isAuthRoute = authRoutes.includes(url.pathname);
+//   const isNewUser = req.auth?.user.newUser;
 
-  if (isApiAuthRoute) {
-    return NextResponse.next();
-  }
+//   if (isApiAuthRoute) {
+//     return NextResponse.next();
+//   }
 
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      if (isNewUser) {
-        return NextResponse.redirect(new URL("/onboarding", req.url));
-      } else {
-        return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
-      }
-    }
-    return NextResponse.next();
-  }
+//   if (isAuthRoute) {
+//     if (isLoggedIn) {
+//       if (isNewUser) {
+//         return NextResponse.redirect(new URL("/onboarding", req.url));
+//       } else {
+//         return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, req.url));
+//       }
+//     }
+//     return NextResponse.next();
+//   }
 
-  if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+//   if (!isLoggedIn && !isPublicRoute) {
+//     return NextResponse.redirect(new URL("/login", req.url));
+//   }
 
-  return NextResponse.next();
-});
+//   return NextResponse.next();
+// });
 
 export const config = {
   matcher: [
