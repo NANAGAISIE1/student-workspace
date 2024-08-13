@@ -9,7 +9,7 @@ import {
 } from "@udecode/plate-basic-marks";
 import { MARK_HIGHLIGHT } from "@udecode/plate-highlight";
 
-import { MyAutoformatRule } from "@renderer/lib/plate/plate-types";
+import { MyAutoformatRule } from "@/lib/plate/plate-types";
 
 export const autoformatMarks: MyAutoformatRule[] = [
   {

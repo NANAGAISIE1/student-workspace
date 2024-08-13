@@ -15,7 +15,7 @@ import {
 } from "@udecode/plate-heading";
 import { ELEMENT_HR } from "@udecode/plate-horizontal-rule";
 
-import { preFormat } from "@renderer/lib/plate/autoformatUtils";
+import { preFormat } from "@/lib/plate/autoformatUtils";
 
 export const autoformatBlocks: AutoformatRule[] = [
   {

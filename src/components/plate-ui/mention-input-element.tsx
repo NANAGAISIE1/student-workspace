@@ -4,6 +4,8 @@ import { cn, withRef } from "@udecode/cn";
 import { PlateElement } from "@udecode/plate-common";
 import { getMentionOnSelectItem } from "@udecode/plate-mention";
 
+import { MENTIONABLES } from "@/lib/plate/mentionables";
+
 import {
   InlineCombobox,
   InlineComboboxContent,
@@ -11,7 +13,6 @@ import {
   InlineComboboxInput,
   InlineComboboxItem,
 } from "./inline-combobox";
-import { MENTIONABLES } from "@/lib/plate/mentionables";
 
 const onSelectItem = getMentionOnSelectItem();
 

@@ -35,7 +35,6 @@ import {
   isSelectionAtCodeBlockStart,
   unwrapCodeBlock,
 } from "@udecode/plate-code-block";
-import { createComboboxPlugin } from "@udecode/plate-combobox";
 import { createCommentsPlugin, MARK_COMMENT } from "@udecode/plate-comments";
 import {
   createPlugins,
@@ -122,38 +121,39 @@ import {
 } from "@udecode/plate-table";
 import { createTrailingBlockPlugin } from "@udecode/plate-trailing-block";
 
-import { autoformatPlugin } from "@renderer/lib/plate/autoformatPlugin";
-import { dragOverCursorPlugin } from "@renderer/lib/plate/dragOverCursorPlugin";
-import { BlockquoteElement } from "@renderer/components/plate-ui/blockquote-element";
-import { CodeBlockElement } from "@renderer/components/plate-ui/code-block-element";
-import { CodeLeaf } from "@renderer/components/plate-ui/code-leaf";
-import { CodeLineElement } from "@renderer/components/plate-ui/code-line-element";
-import { CodeSyntaxLeaf } from "@renderer/components/plate-ui/code-syntax-leaf";
-import { CommentLeaf } from "@renderer/components/plate-ui/comment-leaf";
-import { EmojiCombobox } from "@renderer/components/plate-ui/emoji-combobox";
-import { ExcalidrawElement } from "@renderer/components/plate-ui/excalidraw-element";
-import { HeadingElement } from "@renderer/components/plate-ui/heading-element";
-import { HighlightLeaf } from "@renderer/components/plate-ui/highlight-leaf";
-import { HrElement } from "@renderer/components/plate-ui/hr-element";
-import { ImageElement } from "@renderer/components/plate-ui/image-element";
-import { KbdLeaf } from "@renderer/components/plate-ui/kbd-leaf";
-import { LinkElement } from "@renderer/components/plate-ui/link-element";
-import { LinkFloatingToolbar } from "@renderer/components/plate-ui/link-floating-toolbar";
-import { ListElement } from "@renderer/components/plate-ui/list-element";
-import { MediaEmbedElement } from "@renderer/components/plate-ui/media-embed-element";
-import { MentionElement } from "@renderer/components/plate-ui/mention-element";
-import { MentionInputElement } from "@renderer/components/plate-ui/mention-input-element";
-import { ParagraphElement } from "@renderer/components/plate-ui/paragraph-element";
-import { withPlaceholders } from "@renderer/components/plate-ui/placeholder";
+import { autoformatPlugin } from "@/lib/plate/autoformatPlugin";
+import { dragOverCursorPlugin } from "@/lib/plate/dragOverCursorPlugin";
+import { BlockquoteElement } from "@/components/plate-ui/blockquote-element";
+import { CodeBlockElement } from "@/components/plate-ui/code-block-element";
+import { CodeLeaf } from "@/components/plate-ui/code-leaf";
+import { CodeLineElement } from "@/components/plate-ui/code-line-element";
+import { CodeSyntaxLeaf } from "@/components/plate-ui/code-syntax-leaf";
+import { CommentLeaf } from "@/components/plate-ui/comment-leaf";
+import { ExcalidrawElement } from "@/components/plate-ui/excalidraw-element";
+import { HeadingElement } from "@/components/plate-ui/heading-element";
+import { HighlightLeaf } from "@/components/plate-ui/highlight-leaf";
+import { HrElement } from "@/components/plate-ui/hr-element";
+import { ImageElement } from "@/components/plate-ui/image-element";
+import { KbdLeaf } from "@/components/plate-ui/kbd-leaf";
+import { LinkElement } from "@/components/plate-ui/link-element";
+import { LinkFloatingToolbar } from "@/components/plate-ui/link-floating-toolbar";
+import { ListElement } from "@/components/plate-ui/list-element";
+import { MediaEmbedElement } from "@/components/plate-ui/media-embed-element";
+import { MentionElement } from "@/components/plate-ui/mention-element";
+import { MentionInputElement } from "@/components/plate-ui/mention-input-element";
+import { ParagraphElement } from "@/components/plate-ui/paragraph-element";
+import { withPlaceholders } from "@/components/plate-ui/placeholder";
 import {
   TableCellElement,
   TableCellHeaderElement,
-} from "@renderer/components/plate-ui/table-cell-element";
-import { TableElement } from "@renderer/components/plate-ui/table-element";
-import { TableRowElement } from "@renderer/components/plate-ui/table-row-element";
-import { TodoListElement } from "@renderer/components/plate-ui/todo-list-element";
-import { withDraggables } from "@renderer/components/plate-ui/with-draggables";
-import { TabbableElement } from "@renderer/components/tabbable-element";
+} from "@/components/plate-ui/table-cell-element";
+import { TableElement } from "@/components/plate-ui/table-element";
+import { TableRowElement } from "@/components/plate-ui/table-row-element";
+import { TodoListElement } from "@/components/plate-ui/todo-list-element";
+import { withDraggables } from "@/components/plate-ui/with-draggables";
+import { TabbableElement } from "@/components/tabbable-element";
+import { createComboboxPlugin } from "./combobox-plugin";
+import { EmojiDropdownMenu } from "@/components/plate-ui/emoji-dropdown-menu";
 
 const resetBlockTypesCommonRule = {
   types: [ELEMENT_BLOCKQUOTE, ELEMENT_TODO_LI],
@@ -262,7 +262,7 @@ export const plugins = createPlugins(
       options: { enableScroller: true },
     }),
     createEmojiPlugin({
-      renderAfterEditable: EmojiCombobox as RenderAfterEditable,
+      renderAfterEditable: EmojiDropdownMenu as RenderAfterEditable,
     }),
     createExitBreakPlugin({
       options: {

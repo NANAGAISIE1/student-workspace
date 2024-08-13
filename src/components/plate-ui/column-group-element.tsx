@@ -62,7 +62,7 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
         sideOffset={10}
       >
         <div className="box-content flex h-9 items-center gap-1 [&_svg]:size-4 [&_svg]:text-muted-foreground">
-          {/* <Button onClick={setDoubleColumn} size="sms" variant="ghost">
+          <Button onClick={setDoubleColumn} size="sms" variant="ghost">
             <Icons.doubleColumn />
           </Button>
           <Button onClick={setThreeColumn} size="sms" variant="ghost">
@@ -80,7 +80,7 @@ export function ColumnFloatingToolbar({ children }: React.PropsWithChildren) {
             variant="ghost"
           >
             <Icons.doubleSideDoubleColumn />
-          </Button> */}
+          </Button>
 
           <Separator className="my-1" orientation="vertical" />
           <Button size="sms" variant="ghost" {...buttonProps}>
