@@ -7,7 +7,6 @@ import { compare } from "bcryptjs";
 import { NextAuthConfig } from "next-auth";
 import { client } from "@/db";
 
-const VERCEL_DEPLOYMENT = !!process.env.VERCEL_URL;
 export default {
   providers: [
     Google({
