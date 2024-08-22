@@ -1,18 +1,17 @@
-import { auth } from "@/lib/auth";
+import { isAuthenticatedNextjs } from "@convex-dev/auth/nextjs/server";
 
 export default async function Home() {
-  const session = await auth();
+  const isAuthenticated = isAuthenticatedNextjs();
   return (
     <main className="h-full flex flex-col justify-center items-center">
       <h1>This is the homepage</h1>
       <p>
-        {session ? (
+        {isAuthenticated ? (
           <>
-            <a href="/api/auth/signout">Sign out</a>
-            <span>{JSON.stringify(session)}</span>
+            <a href="#">Sign out</a>
           </>
         ) : (
-          <a href="/login">Sign in {session}</a>
+          <a href="/login">Sign in</a>
         )}
       </p>
     </main>

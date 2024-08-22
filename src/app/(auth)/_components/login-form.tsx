@@ -19,38 +19,26 @@ import {
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginFormSchema } from "./schemas";
 import { z } from "zod";
 import { Loader2 } from "lucide-react";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { login } from "@/actions/login";
-import { toast } from "sonner";
+import { passAuthFlowSchema } from "./schemas";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 export function LoginForm() {
-  const loginForm = useForm<z.infer<typeof loginFormSchema>>({
-    resolver: zodResolver(loginFormSchema),
+  const { signIn } = useAuthActions();
+  const loginForm = useForm<z.infer<typeof passAuthFlowSchema>>({
+    resolver: zodResolver(passAuthFlowSchema),
     defaultValues: {
       email: "",
       password: "",
+      flow: "signIn",
     },
     mode: "onBlur",
   });
 
-  async function onSubmitLoginForm(values: z.infer<typeof loginFormSchema>) {
-    const [_, error] = await login(values);
-    if (error) {
-      if (error.code === "NOT_AUTHORIZED") {
-        loginForm.setError("password", {
-          message: error.message,
-        });
-      }
-
-      if (error.code === "ERROR") {
-        toast.error(error.message);
-      }
-      return;
-    }
+  async function onSubmitLoginForm(values: z.infer<typeof passAuthFlowSchema>) {
+    await signIn("password", { values, redirectTo: "/app" });
   }
 
   return (
@@ -118,7 +106,7 @@ export function LoginForm() {
               variant="outline"
               className="w-full"
               type="button"
-              onClick={() => signIn("google")}
+              onClick={() => signIn("google", { redirectTo: "/app" })}
             >
               Login with Google
             </Button>

@@ -1,31 +1,25 @@
 "use client";
+
 import { UserProfileMenu } from "./user-profile-dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { HomeIcon, InboxIcon, PenBox, Search } from "lucide-react";
 import WorkspaceAi from "./workspace-ai";
 import { useSearchStore } from "../dialogs/use-search-dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createDocument } from "@/actions/documents";
+import { useMutation } from "convex/react";
+import { api } from "@convex/api";
 import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const SidebarMenu = (props: Props) => {
-  const { toggleSearchDialog } = useSearchStore((state) => state);
   const router = useRouter();
+  const { toggleSearchDialog } = useSearchStore((state) => state);
 
-  const queryClient = useQueryClient();
+  const mutation = useMutation(api.documents.mutation.createDocument);
 
-  const mutation = useMutation({
-    mutationFn: createDocument,
-    onSuccess: (document) => {
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
-      router.push(`/app/${document?.id}`);
-    },
-  });
-
-  const handleCreateDocument = () => {
-    mutation.mutate();
+  const handleCreateDocument = async () => {
+    const documentId = await mutation();
+    router.push(`/app/${documentId}`);
   };
 
   return (

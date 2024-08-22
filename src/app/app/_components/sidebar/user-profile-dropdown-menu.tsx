@@ -32,9 +32,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useQuery } from "convex/react";
+import { api } from "@convex/api";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function UserProfileMenu() {
+  const { signOut } = useAuthActions();
+  const user = useQuery(api.user.query.getCurrentUser);
+
   const router = useRouter();
   return (
     <DropdownMenu>
@@ -45,8 +51,11 @@ export function UserProfileMenu() {
           className="hover:bg-background-lighter justify-between pr-0 flex-1"
         >
           <div className="flex space-x-2 items-center">
-            <User className="h-4 w-4" />
-            <p className="!mt-0">Orgtype</p>
+            <Avatar className="h-4 w-4">
+              <AvatarImage src={user?.image} />
+              <AvatarFallback>{user?.name?.slice(0, 2)}</AvatarFallback>
+            </Avatar>
+            <p className="!mt-0">{user?.name}</p>
           </div>
           <PenBox
             className={buttonVariants({
@@ -131,7 +140,7 @@ export function UserProfileMenu() {
           <span>API</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
+        <DropdownMenuItem onClick={async () => await signOut()}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

@@ -1,4 +1,5 @@
 "use client";
+
 import { Plate } from "@udecode/plate-common";
 import { CommentsProvider } from "@udecode/plate-comments";
 import { DndProvider } from "react-dnd";

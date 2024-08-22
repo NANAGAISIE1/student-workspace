@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers";
+import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import { Loader2 } from "lucide-react";
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
 export const viewport = {
   themeColor: [
@@ -22,23 +23,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="antialiased h-screen">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster
-            richColors
-            icons={{
-              loading: <Loader2 className="animate-spin" />,
-            }}
-          />
-        </ThemeProvider>
-      </body>
-    </html>
+    <ConvexAuthNextjsServerProvider storageNamespace="stuser">
+      <html lang="en" suppressHydrationWarning>
+        <body className="antialiased h-screen">
+          <Providers>
+            {children}
+            <Toaster
+              richColors
+              icons={{
+                loading: <Loader2 className="animate-spin" />,
+              }}
+            />
+          </Providers>
+        </body>
+      </html>
+    </ConvexAuthNextjsServerProvider>
   );
 }

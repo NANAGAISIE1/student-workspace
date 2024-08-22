@@ -1,4 +1,3 @@
-import { deleteDocument } from "@/actions/documents";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,24 +6,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { api } from "@convex/api";
+import { Id } from "@convex/dataModel";
+import { useMutation } from "convex/react";
 import { MoreHorizontal, TrashIcon, User } from "lucide-react";
 
 type Props = {
-  documentId: string;
+  documentId: Id<"documents">;
 };
 
 const DocumentActions = ({ documentId }: Props) => {
-  const queryClient = useQueryClient();
-  const mutation = useMutation({
-    mutationFn: deleteDocument,
-    onSuccess: (document) => {
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
-    },
-  });
+  const mutation = useMutation(api.documents.mutation.removeDocument);
 
-  const removeDocument = () => {
-    mutation.mutate({ id: documentId });
+  const removeDocument = async () => {
+    await mutation({ id: documentId });
   };
 
   return (
