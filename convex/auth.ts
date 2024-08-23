@@ -5,7 +5,7 @@ import { Anonymous } from "@convex-dev/auth/providers/Anonymous";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth } from "@convex-dev/auth/server";
 import { ResendOTP } from "./otp/resend";
-import { ResendOTPPasswordReset } from "./password-reset/otp";
+import { ResendOTPPasswordReset } from "./password_reset/otp";
 
 export const { auth, signIn, signOut, store } = convexAuth({
   providers: [
@@ -15,7 +15,14 @@ export const { auth, signIn, signOut, store } = convexAuth({
       from: process.env.AUTH_EMAIL ?? "My App <onboarding@resend.dev>",
     }),
     ResendOTP,
-    Password,
+    Password({
+      profile(params) {
+        return {
+          email: params.email as string,
+          name: params.name as string,
+        };
+      },
+    }),
     Password({ id: "password-with-reset", reset: ResendOTPPasswordReset }),
     Password({
       id: "password-code",

@@ -19,10 +19,11 @@ export const ResendOTP = Email({
     const resend = new ResendAPI(provider.apiKey);
     const { error } = await resend.emails.send({
       // TODO: Update with your app name and email address
-      from: process.env.AUTH_EMAIL ?? "My App <onboarding@resend.dev>",
+      from:
+        process.env.AUTH_EMAIL ?? "Student Workspace <onboarding@resend.dev>",
       to: [email],
       // TODO: Update with your app name
-      subject: `Sign in to My App`,
+      subject: `Sign in to Student Workspace`,
       react: VerificationCodeEmail({ code: token, expires }),
     });
 

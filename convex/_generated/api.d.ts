@@ -14,13 +14,14 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as auth_credentials_login from "../auth/credentials_login.js";
-import type * as auth_reset_password from "../auth/reset_password.js";
-import type * as auth_verify_email from "../auth/verify_email.js";
 import type * as auth from "../auth.js";
 import type * as documents_mutation from "../documents/mutation.js";
 import type * as documents_query from "../documents/query.js";
 import type * as http from "../http.js";
+import type * as otp_resend from "../otp/resend.js";
+import type * as otp_verification from "../otp/verification.js";
+import type * as password_reset_email from "../password_reset/email.js";
+import type * as password_reset_otp from "../password_reset/otp.js";
 import type * as user_query from "../user/query.js";
 
 /**
@@ -32,13 +33,14 @@ import type * as user_query from "../user/query.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  "auth/credentials_login": typeof auth_credentials_login;
-  "auth/reset_password": typeof auth_reset_password;
-  "auth/verify_email": typeof auth_verify_email;
   auth: typeof auth;
   "documents/mutation": typeof documents_mutation;
   "documents/query": typeof documents_query;
   http: typeof http;
+  "otp/resend": typeof otp_resend;
+  "otp/verification": typeof otp_verification;
+  "password_reset/email": typeof password_reset_email;
+  "password_reset/otp": typeof password_reset_otp;
   "user/query": typeof user_query;
 }>;
 export declare const api: FilterApi<

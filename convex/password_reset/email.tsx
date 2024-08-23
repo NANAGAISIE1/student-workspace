@@ -8,7 +8,7 @@ import {
   Text,
 } from "@react-email/components";
 
-export function VerificationCodeEmail({
+export function PasswordResetEmail({
   code,
   expires,
 }: {
@@ -21,10 +21,10 @@ export function VerificationCodeEmail({
         <Head />
         <Container className="container px-20 font-sans">
           <Heading className="text-xl font-bold mb-4">
-            Sign in to Student Workspace
+            Reset your password in Student Workspace
           </Heading>
           <Text className="text-sm">
-            Please enter the following code on the sign in page.
+            Please enter the following code on the password reset page.
           </Text>
           <Section className="text-center">
             <Text className="font-semibold">Verification code</Text>

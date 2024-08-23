@@ -11,7 +11,7 @@
   "dependencies": {
     "@ariakit/react": "^0.4.8",
     "@auth/core": "^0.34.2",
-    "@convex-dev/auth": "^0.0.56",
+    "@convex-dev/auth": "^0.0.61",
     "@hookform/resolvers": "^3.9.0",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-checkbox": "^1.1.1",

@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ConvexAuthNextjsServerProvider storageNamespace="stuser">
+    <ConvexAuthNextjsServerProvider>
       <html lang="en" suppressHydrationWarning>
         <body className="antialiased h-screen">
           <Providers>

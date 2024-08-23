@@ -1,13 +1,10 @@
-import { query } from "@convex/server";
-import { auth } from "../auth";
+import { getAuthUserId } from "@convex-dev/auth/server";
+import { query } from "../_generated/server";
 
 export const getCurrentUser = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-    return await ctx.db.get(userId);
+    const userId = await getAuthUserId(ctx);
+    return userId !== null ? ctx.db.get(userId) : null;
   },
 });

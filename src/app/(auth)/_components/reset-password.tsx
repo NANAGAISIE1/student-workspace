@@ -5,6 +5,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { CodeInput } from "./code-input";
 import { SignInWithEmailCode } from "./email-code";
+import { Loader2Icon } from "lucide-react";
 
 export function ResetPasswordWithEmailCode({
   handleCancel,
@@ -48,7 +49,9 @@ export function ResetPasswordWithEmailCode({
           const formData = new FormData(event.currentTarget);
           signIn(provider, formData).catch((error) => {
             console.error(error);
-            toast.error("Code could not be verified or new password is too short, try again");
+            toast.error(
+              "Code could not be verified or new password is too short, try again",
+            );
             setSubmitting(false);
           });
         }}
@@ -66,6 +69,7 @@ export function ResetPasswordWithEmailCode({
         <input type="hidden" name="flow" value="reset-verification" />
         <input type="hidden" name="email" value={step.email} />
         <Button type="submit" disabled={submitting}>
+          {submitting && <Loader2Icon className="ml-2 animate-spin" />}
           Continue
         </Button>
         <Button type="button" variant="link" onClick={() => setStep("forgot")}>

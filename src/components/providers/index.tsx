@@ -1,5 +1,5 @@
 "use client";
-import { ConvexClientProvider } from "./convex-client";
+import ConvexClientProvider from "./convex-client";
 import { PropsWithChildren } from "react";
 import { ThemeProvider } from "./theme";
 

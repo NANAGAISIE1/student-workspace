@@ -1,7 +1,8 @@
+"use client";
+
 import {
   Cloud,
   CreditCard,
-  Github,
   Keyboard,
   LifeBuoy,
   LogOut,
@@ -39,7 +40,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function UserProfileMenu() {
   const { signOut } = useAuthActions();
-  const user = useQuery(api.user.query.getCurrentUser);
+  const user = useQuery(api.user.query.getCurrentUser, {});
 
   const router = useRouter();
   return (
@@ -51,7 +52,7 @@ export function UserProfileMenu() {
           className="hover:bg-background-lighter justify-between pr-0 flex-1"
         >
           <div className="flex space-x-2 items-center">
-            <Avatar className="h-4 w-4">
+            <Avatar className="h-6 w-6">
               <AvatarImage src={user?.image} />
               <AvatarFallback>{user?.name?.slice(0, 2)}</AvatarFallback>
             </Avatar>
@@ -127,10 +128,6 @@ export function UserProfileMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Github className="mr-2 h-4 w-4" />
-          <span>GitHub</span>
-        </DropdownMenuItem>
         <DropdownMenuItem>
           <LifeBuoy className="mr-2 h-4 w-4" />
           <span>Support</span>

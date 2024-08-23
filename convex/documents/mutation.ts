@@ -1,11 +1,11 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation } from "../_generated/server";
-import { auth } from "../auth";
 import { ConvexError, v } from "convex/values";
 
 export const createDocument = mutation({
   args: {},
   handler: async (ctx) => {
-    const userId = await auth.getUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }
@@ -23,7 +23,7 @@ export const removeDocument = mutation({
     id: v.id("documents"),
   },
   handler: async (ctx, { id }) => {
-    const userId = await auth.getUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }
@@ -47,7 +47,7 @@ export const updateDocument = mutation({
     content: v.optional(v.string()),
   },
   handler: async (ctx, { id, title, content }) => {
-    const userId = await auth.getUserId(ctx);
+    const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }

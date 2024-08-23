@@ -9,6 +9,7 @@ import { ResetPasswordWithEmailCode } from "./reset-password";
 import { SignInMethodDivider } from "./sign-in-divider";
 import { SignInWithPassword } from "./password-form";
 import { SignInWithOAuth } from "./oauth";
+import { Loader2Icon } from "lucide-react";
 
 /**
  * Users choose between OAuth providers or email and password combo
@@ -66,6 +67,7 @@ export function AuthForm() {
             <input name="email" value={step.email} type="hidden" />
             <input name="flow" value="email-verification" type="hidden" />
             <Button type="submit" disabled={submitting}>
+              {submitting && <Loader2Icon className="ml-2 animate-spin" />}
               Continue
             </Button>
             <Button

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Loader2Icon } from "lucide-react";
 
 export function SignInWithPassword({
   provider,
@@ -38,13 +39,6 @@ export function SignInWithPassword({
           });
       }}
     >
-      {flow === "signUp" && (
-        <>
-          <label htmlFor="name">Name</label>
-          <Input name="name" id="name" className="mb-4" />
-        </>
-      )}
-
       <label htmlFor="email">Email</label>
       <Input name="email" id="email" className="mb-4" autoComplete="email" />
 
@@ -70,6 +64,7 @@ export function SignInWithPassword({
       />
       <input name="flow" value={flow} type="hidden" />
       <Button type="submit" disabled={submitting}>
+        {submitting && <Loader2Icon className="mr-2 animate-spin" />}
         {flow === "signIn" ? "Sign in" : "Sign up"}
       </Button>
       <Button

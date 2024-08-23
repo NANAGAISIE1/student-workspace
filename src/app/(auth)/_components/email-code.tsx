@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { Loader2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -35,7 +36,14 @@ export function SignInWithEmailCode({
       <Input name="email" id="email" className="mb-4" autoComplete="email" />
       {children}
       <Button type="submit" disabled={submitting}>
-        Send code
+        {submitting ? (
+          <>
+            <Loader2Icon className="mr-2 animate-spin" />
+            <span>Sending code</span>
+          </>
+        ) : (
+          "Send code"
+        )}
       </Button>
     </form>
   );
