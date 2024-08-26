@@ -10,8 +10,8 @@ const WorkspaceWrapper = ({ children }: { children: React.ReactNode }) => {
       className="flex-1 h-full overflow-hidden"
       initial={false}
       animate={{
-        marginLeft: isSidebarOpen ? "15rem" : "0",
-        width: isSidebarOpen ? "calc(100% - 15rem)" : "100%",
+        marginLeft: isSidebarOpen ? "18rem" : "0",
+        width: isSidebarOpen ? "calc(100% - 18rem)" : "100%",
       }}
       transition={{
         duration: 0.3,

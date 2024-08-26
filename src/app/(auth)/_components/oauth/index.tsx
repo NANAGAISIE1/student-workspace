@@ -1,3 +1,5 @@
+"use client";
+
 import { SignInWithGitHub } from "./github";
 import { SignInWithGoogle } from "./google";
 

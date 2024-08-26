@@ -1,6 +1,5 @@
 import GitHub from "@auth/core/providers/github";
 import Google from "@auth/core/providers/google";
-import Resend from "@auth/core/providers/resend";
 import { Anonymous } from "@convex-dev/auth/providers/Anonymous";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth } from "@convex-dev/auth/server";
@@ -11,11 +10,9 @@ export const { auth, signIn, signOut, store } = convexAuth({
   providers: [
     GitHub,
     Google,
-    Resend({
-      from: process.env.AUTH_EMAIL ?? "My App <onboarding@resend.dev>",
-    }),
-    ResendOTP,
     Password({
+      verify: ResendOTP,
+      reset: ResendOTPPasswordReset,
       profile(params) {
         return {
           email: params.email as string,
@@ -23,14 +20,6 @@ export const { auth, signIn, signOut, store } = convexAuth({
         };
       },
     }),
-    Password({ id: "password-with-reset", reset: ResendOTPPasswordReset }),
-    Password({
-      id: "password-code",
-      reset: ResendOTPPasswordReset,
-      verify: ResendOTP,
-    }),
-    // This one only makes sense with routing, ignore for now:
-    Password({ id: "password-link", verify: Resend }),
     Anonymous,
   ],
 });

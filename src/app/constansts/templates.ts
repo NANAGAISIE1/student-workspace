@@ -1,0 +1,2 @@
+export const TEMPLATES_UNDER_DEVELOPMENT = true;
+export const CALENDAR_UNDER_DEVELOPMENT = true;

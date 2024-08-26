@@ -10,11 +10,11 @@ type Props = {
 
 const DashboardPage = async ({ children }: Props) => {
   return (
-    <main className="flex h-full overflow-hidden w-full">
+    <main className="flex h-full w-full overflow-hidden">
       <Sidebar />
-      <div className="w-full">
+      <div className="w-full py-2">
         <WorkspaceHeader />
-        <Separator />
+        <Separator className="mt-1" />
         <WorkspaceWrapper>{children}</WorkspaceWrapper>
         <SearchDialog />
       </div>

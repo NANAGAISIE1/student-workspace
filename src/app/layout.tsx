@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <ConvexAuthNextjsServerProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className="antialiased h-screen">
+        <body className="h-screen antialiased">
           <Providers>
             {children}
             <Toaster

@@ -7,7 +7,7 @@ export const ResendOTPPasswordReset = Email({
   id: "resend-otp-password-reset",
   apiKey: process.env.AUTH_RESEND_KEY,
   async generateVerificationToken() {
-    return generateRandomString(8, alphabet("0-9"));
+    return generateRandomString(6, alphabet("0-9"));
   },
   async sendVerificationRequest({
     identifier: email,

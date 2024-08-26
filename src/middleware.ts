@@ -9,21 +9,20 @@ import {
 } from "@convex-dev/auth/nextjs/server";
 
 const isLoginPage = createRouteMatcher(["/login"]);
-const isProtectedRoute = createRouteMatcher(["/app(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/app(.*)", "/onboarding(.*)"]);
 
-export default convexAuthNextjsMiddleware((request) => {
+export default convexAuthNextjsMiddleware(async (request) => {
   const url = request.nextUrl;
   const isLoggedIn = isAuthenticatedNextjs();
   const isApiAuthRoute = url.pathname.startsWith(apiAuthPrefix);
-  const isAuthRoute = isLoginPage(request);
 
   if (isApiAuthRoute) {
     return NextResponse.next();
   }
 
-  if (isAuthRoute) {
+  if (isLoginPage(request)) {
     if (isLoggedIn) {
-      nextjsMiddlewareRedirect(request, DEFAULT_LOGIN_REDIRECT);
+      return nextjsMiddlewareRedirect(request, DEFAULT_LOGIN_REDIRECT);
     }
     return NextResponse.next();
   }
@@ -31,6 +30,7 @@ export default convexAuthNextjsMiddleware((request) => {
   if (isProtectedRoute(request) && !isLoggedIn) {
     return nextjsMiddlewareRedirect(request, "/login");
   }
+
   return NextResponse.next();
 });
 

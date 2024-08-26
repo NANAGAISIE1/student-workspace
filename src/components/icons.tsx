@@ -346,6 +346,45 @@ export const DoubleSideDoubleColumnOutlined = (props: LucideProps) => (
   </svg>
 );
 
+export const RemoveFavoriteIcon = (props: LucideProps) => (
+  <svg
+    fill="none"
+    height="16"
+    viewBox="0 0 24 24"
+    width="16"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <line
+      x1="15"
+      y1="9"
+      x2="9"
+      y2="15"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <line
+      x1="9"
+      y1="9"
+      x2="15"
+      y2="15"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 const LayoutIcon = (props: LucideProps) => (
   <svg
     fill="currentColor"
@@ -381,7 +420,7 @@ const GitHubLogo = (props: LucideProps) => {
       ></path>
     </svg>
   );
-}
+};
 
 const GoogleLogo = (props: LucideProps) => {
   return (
@@ -404,7 +443,7 @@ const GoogleLogo = (props: LucideProps) => {
       />
     </svg>
   );
-}
+};
 
 export const Icons = {
   GitHubLogo,
@@ -427,6 +466,7 @@ export const Icons = {
   borderLeft,
   borderNone,
   borderRight,
+  RemoveFavoriteIcon,
   borderTop,
   check: Check,
   chevronDown: ChevronDown,
