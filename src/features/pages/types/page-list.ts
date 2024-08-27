@@ -1,24 +1,8 @@
-export type NodeId = string;
+import { Doc, Id } from "@convex/dataModel";
 
-export type Node = {
-  id: NodeId;
-  name?: string;
-  emoji?: string;
-  children?: Node[];
-  parentId?: NodeId;
-};
-
-export interface FlatNode extends Omit<Node, "children"> {
-  children?: NodeId[];
-}
-
-export type SidebarItemProps = {
-  nodeId: NodeId;
-  workspace: string;
-  allNodes: Record<NodeId, FlatNode>;
-};
-
-export type WorkspacePagesProps = {
-  data: Node[];
-  workspace: string;
+export type PageItemProps = {
+  node: Doc<"pages">;
+  level: number;
+  allPages: Doc<"pages">[];
+  workspaceId: Id<"workspaces">;
 };

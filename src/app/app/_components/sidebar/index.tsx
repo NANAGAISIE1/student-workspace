@@ -4,11 +4,11 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SidebarWrapper from "./sidebar-wrapper";
 import SidebarMenu from "./side-bar-menu";
-import FavoritePages from "./pages/favorites";
-import SharedPages from "./pages/shared";
-import PrivatePages from "./pages/private";
 import Hints from "@/components/hints";
-import TrashPopover from "./pages/actions/trash-popover";
+import TrashPopover from "../../../../features/pages/components/actions/trash-popover";
+import PrivatePagesNav from "@/features/pages/components/private-pages-nav";
+import FavoritePageNav from "@/features/pages/components/favorite-pages-nav";
+import SharedPagesNav from "@/features/pages/components/shared-pages-nav";
 
 const Sidebar = async () => {
   return (
@@ -16,9 +16,9 @@ const Sidebar = async () => {
       <SidebarMenu />
       <Separator />
       <ScrollArea className="flex h-full w-full flex-col justify-start overflow-y-auto px-2">
-        <FavoritePages />
-        <SharedPages />
-        <PrivatePages />
+        <FavoritePageNav />
+        <SharedPagesNav />
+        <PrivatePagesNav />
       </ScrollArea>
       <div className="flex flex-col space-y-2 px-2">
         <Hints message="Coming soon" side="top" align="center">

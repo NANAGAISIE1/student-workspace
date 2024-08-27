@@ -30,7 +30,7 @@ const SidebarMenu = (props: Props) => {
         <Button size={"icon"} variant={"ghost"} onClick={toggleSidebar}>
           <ArrowLeftToLineIcon className="h-4 w-4" />
         </Button>
-        <Button size={"icon"} variant={"ghost"} onClick={() => createPage({})}>
+        <Button size={"icon"} variant={"ghost"} onClick={() => createPage()}>
           <PenBox className="h-4 w-4" />{" "}
         </Button>
       </div>

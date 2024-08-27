@@ -6,6 +6,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { UserIcon } from "lucide-react";
 
@@ -14,6 +15,10 @@ type Props = {};
 const SearchCommandModal = (props: Props) => {
   return (
     <>
+      <DialogTitle className="sr-only">Search</DialogTitle>
+      <DialogDescription className="sr-only">
+        Search workspace.
+      </DialogDescription>
       <CommandInput placeholder="Type a command or search..." />
       <CommandList className="h-full overflow-y-hidden">
         <CommandEmpty>No results found.</CommandEmpty>

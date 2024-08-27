@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { debounce } from "lodash";
 import {
   Popover,
@@ -22,12 +22,10 @@ const RenameInputPopover: React.FC<RenameInputPopoverProps> = ({
   const [open, isOpen] = useState(false);
 
   // Debounce function to delay the onRename call
-  const debouncedRename = useCallback(
-    debounce((name: string) => {
-      onRename(name);
-    }, 300),
-    [],
-  );
+  const debouncedRename = (value: string) =>
+    debounce(() => {
+      onRename(value);
+    }, 300);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;

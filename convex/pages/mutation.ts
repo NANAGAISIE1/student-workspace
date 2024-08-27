@@ -20,12 +20,9 @@ export const createPage = mutation({
       return null;
     }
 
-    const ownerId = await ctx.db
-      .query("workspaces")
-      .withIndex("by_owner_id", (q) => q.eq("ownerId", userId))
-      .unique();
+    const admin = await isAdmin(ctx, workspaceId);
 
-    if (!ownerId) {
+    if (!admin) {
       throw new ConvexError({
         message: "You do not own this workspace",
         status: 401,

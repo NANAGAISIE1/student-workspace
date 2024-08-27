@@ -131,9 +131,26 @@ export const usePageQueries = () => {
     };
   };
 
+  const useGetFavoriteStatus = (pageId: Id<"pages">) => {
+    const { data, error, isError, isPending } = useQueryWithStatus(
+      api.pages.query.getFavoriteStatus,
+      {
+        pageId: pageId,
+      },
+    );
+
+    return {
+      data,
+      error,
+      isError,
+      isPending,
+    };
+  };
+
   return {
     useGetPageById,
     useGetPagesByWorkspaceId,
+    useGetFavoriteStatus,
     useGetSharedPagesByWorkspaceId,
     useGetPrivatePagesByWorkspaceId,
     useGetFavoritePagesByWorkspaceId,

@@ -1,29 +1,30 @@
 import Hints from "@/components/hints";
 import { Button } from "@/components/ui/button";
 import { CommandItem } from "@/components/ui/command";
-import { api } from "@convex/api";
 import { Doc } from "@convex/dataModel";
-import { useMutation } from "convex/react";
 import { TrashIcon, Undo2Icon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { usePage } from "../../hooks/use-page";
 
 type Props = {
-  page: Doc<"deletedPages">;
+  page: Doc<"pages">;
   workspaceId: string;
 };
 
 const TrashList = ({ page, workspaceId }: Props) => {
-  const moveBackToPages = useMutation(api.pages.mutation.moveBackToPagesById);
-  const deletePage = useMutation(api.pages.mutation.deletePagePermanentlyById);
+  const {
+    archivePage: togglePageArchive,
+    deletePagePermanentlyById: deletePage,
+  } = usePage();
 
   const restorePage = async () => {
-    await moveBackToPages({ pageId: page._id });
+    await togglePageArchive(page._id);
     toast.success("Page restored");
   };
 
   const deletePagePermanently = async () => {
-    await deletePage({ pageId: page._id });
+    await deletePage(page._id);
     toast.error("Page deleted");
   };
 

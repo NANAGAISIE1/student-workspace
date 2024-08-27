@@ -1,9 +1,7 @@
 "use client";
-
 import { create } from "zustand";
 import { Dialog } from "@/components/ui/dialog";
 import { CommandDialog } from "./ui/command";
-import { useEffect, useState } from "react";
 
 interface Modal {
   id: string;
@@ -37,9 +35,11 @@ export const useModalStore = create<ModalState>()((set) => ({
   closeModal: (id) =>
     set((prevState) => {
       return {
-        modals: prevState.modals.map((modal) =>
-          modal.id === id ? { ...modal, isOpen: false, type: "dialog" } : modal,
-        ),
+        modals: prevState.modals
+          .map((modal) =>
+            modal.id === id ? { ...modal, isOpen: false } : modal,
+          )
+          .filter((modal) => modal.isOpen),
       };
     }),
 }));
@@ -47,14 +47,6 @@ export const useModalStore = create<ModalState>()((set) => ({
 export default function Modals() {
   const modals = useModalStore((state) => state.modals);
   const closeModal = useModalStore((state) => state.closeModal);
-
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
 
   return (
     <>
@@ -65,6 +57,7 @@ export default function Modals() {
               <Dialog
                 open={modal.isOpen}
                 onOpenChange={() => closeModal(modal.id)}
+                key={modal.id}
               >
                 {modal.children}
               </Dialog>
@@ -74,6 +67,7 @@ export default function Modals() {
               <CommandDialog
                 open={modal.isOpen}
                 onOpenChange={() => closeModal(modal.id)}
+                key={modal.id}
               >
                 {modal.children}
               </CommandDialog>

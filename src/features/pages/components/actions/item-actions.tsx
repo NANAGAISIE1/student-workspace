@@ -6,10 +6,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { useQueryWithStatus } from "@/services/convex-query";
-import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
-import { useMutation } from "convex/react";
 import {
   ArrowUpRightIcon,
   LinkIcon,
@@ -23,44 +20,36 @@ import RenameInputPopover from "./rename-input-popover";
 import { formatRelative } from "date-fns";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Hints from "@/components/hints";
+import { usePage } from "../../hooks/use-page";
+import { useUser } from "@/features/auth/api/users";
 
 export const PageItemActions: React.FC<{
-  nodeId: string;
-  workspaceId: string;
+  nodeId: Id<"pages">;
+  workspaceId: Id<"workspaces">;
 }> = ({ nodeId, workspaceId }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const toggleArchivePage = useMutation(api.pages.mutation.toggleArchivePage);
-  const toggleFavoritePage = useMutation(api.pages.mutation.toggleFavorite);
-  const { data: user } = useQueryWithStatus(api.user.query.getCurrentUser, {});
-  const rename = useMutation(api.pages.mutation.renamePageById);
-  const { data: page, isPending } = useQueryWithStatus(
-    api.pages.query.getPageById,
-    {
-      pageId: nodeId as Id<"pages">,
-    },
-  );
-  const { data: favorite } = useQueryWithStatus(
-    api.pages.query.getFavoriteStatus,
-    {
-      pageId: nodeId as Id<"pages">,
-    },
-  );
+
+  const {
+    toggleFavoritePage,
+    archivePage,
+    usePageById,
+    useFavoriteStatus,
+    renamePageById,
+  } = usePage();
+
+  const { user } = useUser();
+  const { page } = usePageById(nodeId);
+  const { favorite } = useFavoriteStatus(nodeId);
 
   const removePage = async () => {
-    const deletedPageId = await toggleArchivePage({
-      pageId: nodeId as Id<"pages">,
-    });
-
-    if (!deletedPageId) {
-      toast.warning("Failed to move page to trash");
-      return;
-    }
+    await archivePage(nodeId);
 
     toast.warning("Page moved to trash", {
       action: {
         label: "Undo",
-        onClick: async () => await toggleArchivePage({ pageId: deletedPageId }),
+        onClick: async () => await archivePage(nodeId),
       },
     });
     router.push(`/app/${workspaceId}`);
@@ -68,24 +57,11 @@ export const PageItemActions: React.FC<{
   };
 
   const renamePage = async (newName: string) => {
-    await rename({
-      pageId: nodeId as Id<"pages">,
-      title: newName,
-    });
+    await renamePageById(nodeId, newName);
   };
 
   const toggleFavorite = async () => {
-    if (favorite) {
-      await toggleFavoritePage({
-        pageId: nodeId as Id<"pages">,
-        workspaceId: workspaceId as Id<"workspaces">,
-      });
-    } else {
-      await toggleFavoritePage({
-        pageId: nodeId as Id<"pages">,
-        workspaceId: workspaceId as Id<"workspaces">,
-      });
-    }
+    toggleFavoritePage(nodeId, workspaceId);
     setOpen(false);
   };
 
@@ -95,15 +71,23 @@ export const PageItemActions: React.FC<{
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant={"ghost"}
-          size={"sm"}
-          className="opacity-0 group-hover:opacity-100"
-        >
-          <MoreHorizontal className="size-3" />
-        </Button>
-      </PopoverTrigger>
+      <Hints
+        message="Delete, rename and more"
+        asChild
+        className="text-xs"
+        side="bottom"
+        align="center"
+      >
+        <PopoverTrigger asChild>
+          <Button
+            variant={"ghost"}
+            size={"sm"}
+            className="p-2 opacity-0 group-hover:opacity-100"
+          >
+            <MoreHorizontal className="size-4" />
+          </Button>
+        </PopoverTrigger>
+      </Hints>
       <PopoverContent
         className="w-56 space-y-2 p-1"
         side="bottom"
@@ -150,7 +134,7 @@ export const PageItemActions: React.FC<{
           onClick={removePage}
         >
           <TrashIcon className="size-4" />
-          <p className="!mt-0">Move to trash</p>
+          <span className="!mt-0">Move to trash</span>
         </Button>
         <Separator />
         <Link
@@ -163,7 +147,7 @@ export const PageItemActions: React.FC<{
           target="_blank"
         >
           <ArrowUpRightIcon className="size-4" />
-          <p className="!mt-0">Open in new tab</p>
+          <span className="!mt-0">Open in new tab</span>
         </Link>
         <Separator />
         <div className="flex flex-col">

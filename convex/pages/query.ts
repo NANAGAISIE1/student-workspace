@@ -35,13 +35,8 @@ export const getPagesByWorkspaceId = query({
 
     const allPages = await ctx.db
       .query("pages")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("workspaceId"), workspaceId),
-          q.field("archived"),
-          false,
-        ),
-      )
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
+      .filter((q) => q.eq(q.field("archived"), false))
       .collect();
 
     return allPages;
