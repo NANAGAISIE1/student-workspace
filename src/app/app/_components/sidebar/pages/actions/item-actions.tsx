@@ -30,14 +30,10 @@ export const PageItemActions: React.FC<{
 }> = ({ nodeId, workspaceId }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const addPageToDeleted = useMutation(api.pages.mutation.addPageToDeleted);
-  const addPageToFavorites = useMutation(api.pages.mutation.addPageToFavorites);
-  const removePageFromFavorites = useMutation(
-    api.pages.mutation.removePageFromFavorites,
-  );
+  const toggleArchivePage = useMutation(api.pages.mutation.toggleArchivePage);
+  const toggleFavoritePage = useMutation(api.pages.mutation.toggleFavorite);
   const { data: user } = useQueryWithStatus(api.user.query.getCurrentUser, {});
   const rename = useMutation(api.pages.mutation.renamePageById);
-  const restorePage = useMutation(api.pages.mutation.moveBackToPagesById);
   const { data: page, isPending } = useQueryWithStatus(
     api.pages.query.getPageById,
     {
@@ -52,7 +48,7 @@ export const PageItemActions: React.FC<{
   );
 
   const removePage = async () => {
-    const deletedPageId = await addPageToDeleted({
+    const deletedPageId = await toggleArchivePage({
       pageId: nodeId as Id<"pages">,
     });
 
@@ -64,7 +60,7 @@ export const PageItemActions: React.FC<{
     toast.warning("Page moved to trash", {
       action: {
         label: "Undo",
-        onClick: async () => await restorePage({ pageId: deletedPageId }),
+        onClick: async () => await toggleArchivePage({ pageId: deletedPageId }),
       },
     });
     router.push(`/app/${workspaceId}`);
@@ -80,9 +76,12 @@ export const PageItemActions: React.FC<{
 
   const toggleFavorite = async () => {
     if (favorite) {
-      await removePageFromFavorites({ pageId: nodeId as Id<"pages"> });
+      await toggleFavoritePage({
+        pageId: nodeId as Id<"pages">,
+        workspaceId: workspaceId as Id<"workspaces">,
+      });
     } else {
-      await addPageToFavorites({
+      await toggleFavoritePage({
         pageId: nodeId as Id<"pages">,
         workspaceId: workspaceId as Id<"workspaces">,
       });

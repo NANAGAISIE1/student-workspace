@@ -1,7 +1,7 @@
 import { Id } from "@convex/dataModel";
 import Workspace from "./_workspace";
-import Document from "./_document";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Page from "./_document";
 
 type Props = {};
 
@@ -28,7 +28,7 @@ const Home = ({
   if (documentId) {
     return (
       <ScrollArea className="h-[calc(100dvh-56px)]">
-        <Document id={documentId as Id<"documents">[]} />
+        <Page id={documentId as Id<"pages">[]} />
       </ScrollArea>
     );
   }

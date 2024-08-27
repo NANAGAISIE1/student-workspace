@@ -1,46 +1,22 @@
 import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Toggle } from "@/components/ui/toggle";
-import { NotepadTextIcon, GraduationCapIcon, LaptopIcon } from "lucide-react";
-import { Inputs } from "./onboarding-form";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-
-type Interest = {
-  type: Inputs["interests"][number];
-  title: string;
-  icon: JSX.Element;
-};
-
-const interests: Interest[] = [
-  {
-    type: "notes",
-    title: "Notes",
-    icon: <NotepadTextIcon className="mr-2 h-4 w-4" />,
-  },
-  {
-    type: "research",
-    title: "Research",
-    icon: <GraduationCapIcon className="mr-2 h-4 w-4" />,
-  },
-  {
-    type: "site",
-    title: "Site",
-    icon: <LaptopIcon className="mr-2 h-4 w-4" />,
-  },
-];
+import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";
+import { onboardingWorkspaceInterests } from "@/features/workspaces/constants/onboarding";
 
 interface Step2Props {
-  register: UseFormRegister<Inputs>;
-  setValue: UseFormSetValue<Inputs>;
+  register: UseFormRegister<OnboardingFormInputs>;
+  setValue: UseFormSetValue<OnboardingFormInputs>;
   watch: any;
-  errors: FieldErrors<Inputs>;
+  errors: FieldErrors<OnboardingFormInputs>;
   delta: number;
 }
 
 const Step2: React.FC<Step2Props> = ({ register, setValue, watch, delta }) => {
   const [selectedInterests, setSelectedInterests] = useState<
-    Inputs["interests"]
+    OnboardingFormInputs["interests"]
   >([]);
 
   useEffect(() => {
@@ -48,7 +24,7 @@ const Step2: React.FC<Step2Props> = ({ register, setValue, watch, delta }) => {
     setSelectedInterests(interests);
   }, [watch]);
 
-  const handleToggle = (value: Inputs["interests"][number]) => {
+  const handleToggle = (value: OnboardingFormInputs["interests"][number]) => {
     let updatedInterests;
     if (selectedInterests.includes(value)) {
       updatedInterests = selectedInterests.filter(
@@ -76,7 +52,7 @@ const Step2: React.FC<Step2Props> = ({ register, setValue, watch, delta }) => {
           </p>
         </div>
         <div className="flex flex-wrap gap-6">
-          {interests.map((interest) => (
+          {onboardingWorkspaceInterests.map((interest) => (
             <Toggle
               key={interest.type}
               value={interest.type}

@@ -15,37 +15,37 @@ const schema = defineSchema({
     role: v.optional(
       v.union(v.literal("student"), v.literal("lecturer"), v.literal("admin")),
     ),
-    plan: v.optional(v.union(v.literal("free"), v.literal("pro"))),
   }).index("email", ["email"]),
-
-  organizations: defineTable({
-    name: v.string(),
-    type: v.union(
-      v.literal("college"),
-      v.literal("team"),
-      v.literal("personal"),
-    ),
-    ownerId: v.id("users"),
-    members: v.optional(v.array(v.id("users"))),
-    updatedAt: v.number(),
-  }).index("by_owner", ["ownerId"]),
-
-  userOrganizations: defineTable({
-    userId: v.id("users"),
-    organizationId: v.id("organizations"),
-    role: v.union(v.literal("admin"), v.literal("member")),
-  })
-    .index("by_user", ["userId"])
-    .index("by_organization", ["organizationId"]),
 
   workspaces: defineTable({
     name: v.string(),
     ownerId: v.id("users"),
-    organizationId: v.optional(v.id("organizations")),
     updatedAt: v.number(),
+    archived: v.optional(v.boolean()),
+    updatedBy: v.optional(v.id("users")),
+    plan: v.optional(
+      v.union(v.literal("free"), v.literal("personal"), v.literal("team")),
+    ),
   })
-    .index("by_owner", ["ownerId"])
-    .index("by_organization", ["organizationId"]),
+    .index("by_owner_id", ["ownerId"])
+    .index("by_archived", ["archived"])
+    .index("by_updated_by", ["updatedBy"])
+    .index("by_plan", ["plan"]),
+
+  workspaceMembers: defineTable({
+    workspaceId: v.id("workspaces"),
+    userId: v.id("users"),
+    role: v.union(v.literal("admin"), v.literal("member"), v.literal("guest")),
+  })
+    .index("by_workspace_id", ["workspaceId"])
+    .index("by_user_id", ["userId"])
+    .index("by_workspace_id_user_id", ["workspaceId", "userId"])
+    .searchIndex("search_role", {
+      searchField: "role",
+    })
+    .searchIndex("search_user_id", {
+      searchField: "userId",
+    }),
 
   pages: defineTable({
     title: v.string(),
@@ -54,9 +54,27 @@ const schema = defineSchema({
     content: v.optional(v.string()),
     emoji: v.optional(v.string()),
     updatedAt: v.number(),
+    type: v.optional(
+      v.union(v.literal("page"), v.literal("todo"), v.literal("calendar")),
+    ),
+    parentId: v.optional(v.id("pages")),
+    lastEditedBy: v.optional(v.id("users")),
+    archived: v.optional(v.boolean()),
   })
     .index("by_workspace", ["workspaceId"])
-    .index("by_creator", ["creatorId"]),
+    .index("by_creator", ["creatorId"])
+    .index("by_workspace_id_user_id", ["workspaceId", "creatorId"])
+    .index("by_workspace_id_parent_id", ["workspaceId", "parentId"])
+    .index("by_parent", ["parentId"])
+    .searchIndex("search_content", {
+      searchField: "content",
+    })
+    .searchIndex("search_title", {
+      searchField: "title",
+    })
+    .searchIndex("search_emoji", {
+      searchField: "emoji",
+    }),
 
   sharedPages: defineTable({
     pageId: v.id("pages"),
@@ -80,20 +98,6 @@ const schema = defineSchema({
   })
     .index("by_creator", ["creatorId"])
     .index("by_page", ["pageId"]),
-
-  deletedPages: defineTable({
-    title: v.string(),
-    workspaceId: v.id("workspaces"),
-    creatorId: v.id("users"),
-    content: v.optional(v.string()),
-    emoji: v.optional(v.string()),
-    updatedAt: v.number(),
-  }).index("by_creator", ["creatorId"]),
-
-  deletedWorkspaces: defineTable({
-    workspaceId: v.id("workspaces"),
-    creatorId: v.id("users"),
-  }).index("by_creator", ["creatorId"]),
 });
 
 export default schema;

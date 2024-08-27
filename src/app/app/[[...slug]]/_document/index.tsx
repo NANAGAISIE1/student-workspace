@@ -1,11 +1,11 @@
 import { Id } from "@convex/dataModel";
 
 type Props = {
-  id: Id<"documents">[];
+  id: Id<"pages">[];
 };
 
-const Document = ({ id }: Props) => {
-  return <div>Document {id}</div>;
+const Page = ({ id }: Props) => {
+  return <div>Page {id}</div>;
 };
 
-export default Document;
+export default Page;

@@ -1,4 +1,5 @@
 "use client";
+
 import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
 import RecentlyVisited from "./recently-visited";
@@ -37,12 +38,12 @@ const Workspace = ({ id }: Props) => {
   }
 
   // Determine the workspace ID to use
-  const workspaceId = id?.[0] || storedId || fetchedWorkspaceId;
+  const workspaceId = id?.[0] || storedId || fetchedWorkspaceId?._id;
 
   // Update the Zustand store if the workspace ID was fetched from the database
   useEffect(() => {
     if (fetchedWorkspaceId && !storedId) {
-      setCurrentWorkspaceId(fetchedWorkspaceId);
+      setCurrentWorkspaceId(fetchedWorkspaceId._id);
     }
   }, [fetchedWorkspaceId, storedId, setCurrentWorkspaceId]);
 

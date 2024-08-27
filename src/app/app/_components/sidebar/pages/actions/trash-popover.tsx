@@ -26,7 +26,7 @@ const TrashPopover = (props: Props) => {
   const [open, setOpen] = useState(false);
   const { workspaceId } = useWorkspaceStore((state) => state);
   const { data: pages } = useQueryWithStatus(
-    api.pages.query.getDeletedPageInTrashByWorkspaceId,
+    api.pages.query.getArchivedPagesByWorkspaceId,
     workspaceId ? { workspaceId } : "skip",
   );
 
@@ -76,7 +76,11 @@ const TrashPopover = (props: Props) => {
               <div className="flex flex-col space-y-2 py-2">
                 {pages &&
                   pages.map((page) => (
-                    <TrashList page={page} workspaceId={workspaceId} />
+                    <TrashList
+                      page={page}
+                      workspaceId={workspaceId}
+                      key={page._id}
+                    />
                   ))}
               </div>
             </CommandGroup>

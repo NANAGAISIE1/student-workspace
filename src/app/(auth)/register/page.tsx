@@ -1,24 +1,12 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SignInWithOAuth } from "../_components/oauth";
-import { SignInMethodDivider } from "../_components/sign-in-divider";
-import { RegisterWithPassword } from "./_components/register-with-password";
+import { PasswordRegistrationCard } from "@/features/auth/components/register";
 
 function RegisterPage() {
   return (
-    <main className="flex justify-center items-center h-full flex-col">
-      <Card className="max-w-[384px] mx-auto w-full flex flex-col gap-4">
-        <CardHeader>
-          <CardTitle>Create an account</CardTitle>
-        </CardHeader>
-        <CardContent className="mx-auto w-full flex flex-col gap-4">
-          <SignInWithOAuth />
-          <SignInMethodDivider />
-          <RegisterWithPassword />
-        </CardContent>
-      </Card>
-      <div className="flex justify-center items-center">
+    <main className="flex h-full flex-col items-center justify-center">
+      <PasswordRegistrationCard />
+      <div className="flex items-center justify-center">
         <p className="mr-2">Have an account?</p>
         <Link
           className={buttonVariants({

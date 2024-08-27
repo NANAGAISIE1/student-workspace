@@ -2,19 +2,13 @@
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSidebarStore } from "./use-sidebar";
-import { useQueryWithStatus } from "@/services/convex-query";
-import { api } from "@convex/api";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const SidebarWrapper = ({ children }: Props) => {
-  const { isSidebarOpen, toggleSidebar } = useSidebarStore((state) => state);
-  const { data: user, isPending } = useQueryWithStatus(
-    api.user.query.getCurrentUser,
-    {},
-  );
+  const { isSidebarOpen } = useSidebarStore((state) => state);
 
   const sidebarVariants = {
     open: { width: "18rem", x: 0 },

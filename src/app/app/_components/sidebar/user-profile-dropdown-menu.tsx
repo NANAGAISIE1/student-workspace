@@ -16,33 +16,33 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { api } from "@convex/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PersonalWorkspaces } from "./workspaces/personal-workspace";
-import { SharedWorkspaces } from "./workspaces/shared-workspaces";
 import { useRouter } from "next/navigation";
-import { useQueryWithStatus } from "@/services/convex-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUser } from "@/features/auth/api/users";
+import { useWorkspace } from "@/features/workspaces/hooks/use-workspace";
+import { toast } from "sonner";
+import { WorkspaceSelector } from "./workspace-selector";
 
 export function UserProfileMenu() {
   const { signOut } = useAuthActions();
-  const { data: user, isPending: userPending } = useQueryWithStatus(
-    api.user.query.getCurrentUser,
-    {},
-  );
+  const { user, isLoading } = useUser();
   const router = useRouter();
-  const { data: workspaces, isPending: workspacePending } = useQueryWithStatus(
-    api.workspaces.query.getAllUserWorkspaces,
-    {},
-  );
+  const { getWorkspaces } = useWorkspace();
+  const { isError, isPending, workspaces, error } = getWorkspaces();
+
+  if (isError) {
+    console.error(error);
+    toast.error("Failed to fetch workspaces");
+  }
 
   return (
     <>
-      {userPending ? (
+      {isLoading ? (
         <Button
           variant="ghost"
           size={"sm"}
-          className="hover:bg-background-lighter justify-start pr-0 flex-1 flex items-center truncate space-x-2"
+          className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
         >
           <Skeleton className="h-6 w-6 rounded-lg" />
           <Skeleton className="h-6 w-full" />
@@ -54,7 +54,7 @@ export function UserProfileMenu() {
               <Button
                 variant="ghost"
                 size={"sm"}
-                className="hover:bg-background-lighter justify-start pr-0 flex-1 flex items-center truncate space-x-2"
+                className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
               >
                 <Avatar className="h-6 w-6 rounded-lg">
                   <AvatarImage src={user.image} />
@@ -63,8 +63,8 @@ export function UserProfileMenu() {
                 <p className="!mt-0">{user.name}</p>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-72 ml-6">
-              <div className="flex justify-between items-center">
+            <DropdownMenuContent className="ml-6 w-72">
+              <div className="flex items-center justify-between">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
@@ -87,8 +87,8 @@ export function UserProfileMenu() {
                 </DropdownMenuSub>
               </div>
               <DropdownMenuSeparator />
-              {workspacePending ? (
-                <DropdownMenuItem className="flex justify-start items-center space-x-3">
+              {isPending ? (
+                <DropdownMenuItem className="flex items-center justify-start space-x-3">
                   <Skeleton className="h-9 w-9 rounded-lg" />
                   <div className="flex flex-col">
                     <Skeleton className="h-4 w-full" />
@@ -96,19 +96,14 @@ export function UserProfileMenu() {
                   </div>
                 </DropdownMenuItem>
               ) : (
-                workspaces && (
-                  <>
-                    <PersonalWorkspaces
-                      personalWorkspace={workspaces.personal}
-                      user={user}
-                    />
-                    <DropdownMenuSeparator />
-                    <SharedWorkspaces
-                      sharedWorkspace={workspaces.shared}
-                      user={user}
-                    />
-                  </>
-                )
+                workspaces &&
+                workspaces.map((workspace) => (
+                  <WorkspaceSelector
+                    workspace={workspace}
+                    user={user}
+                    key={workspace._id}
+                  />
+                ))
               )}
               <DropdownMenuSeparator />
               <DropdownMenuGroup>

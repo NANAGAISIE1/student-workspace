@@ -2,7 +2,7 @@ import Sidebar from "./_components/sidebar";
 import WorkspaceHeader from "./_components/header";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceWrapper from "./_components/workspace-wrapper";
-import SearchDialog from "./_components/dialogs/search-command-dialog";
+import SearchDialog from "@/features/workspaces/components/search-dialog";
 
 type Props = {
   children: React.ReactNode;

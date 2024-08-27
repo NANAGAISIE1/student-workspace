@@ -1,115 +1,58 @@
 import { v } from "convex/values";
-import { query, QueryCtx } from "../_generated/server";
+import { query } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { asyncMap } from "convex-helpers";
 
 export const getWorkspaceById = query({
   args: { workspaceId: v.id("workspaces") },
   handler: async (ctx, { workspaceId }) => {
-    // const userId = await getAuthUserId(ctx);
-    // if (userId === null) {
-    //   return null;
-    // }
-    // const workspace = await ctx.db.get(workspaceId);
-    // if (!workspace) {
-    //   throw new ConvexError({ message: "Document not found", status: 404 });
-    // }
-    // if (workspace.ownerId !== userId && !workspace.members?.includes(userId)) {
-    //   throw new ConvexError({ message: "Unauthorized", status: 403 });
-    // }
-    // return workspace;
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const member = await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_workspace_id_user_id", (q) =>
+        q.eq("workspaceId", workspaceId).eq("userId", userId),
+      )
+      .unique();
+
+    if (!member) {
+      return null;
+    }
+
+    const workspace = await ctx.db.get(member.workspaceId);
+
+    return workspace;
   },
 });
 
-export const getPersonalWorkspacesByUserId = query({
-  handler: async (ctx) => {
-    // const userId = await getAuthUserId(ctx);
-    // if (userId === null) {
-    //   return null;
-    // }
-    // const workspaces = await ctx.db
-    //   .query("workspaces")
-    //   .filter((q) =>
-    //     q.and(
-    //       q.eq(q.field("ownerId"), userId),
-    //       q.eq(q.field("type"), "personal"),
-    //     ),
-    //   )
-    //   .collect();
-    // return workspaces;
-  },
-});
-
-export const getOrganizationalWorkspacesByUserId = query({
-  handler: async (ctx) => {
-    // const userId = await getAuthUserId(ctx);
-    // if (userId === null) {
-    //   return null;
-    // }
-    // const workspaces = await ctx.db
-    //   .query("workspaces")
-    //   .filter((q) => q.field("members"))
-    //   .collect();
-    // return workspaces;
-  },
-});
-
-export const getAllUserWorkspaces = query({
+export const getWorkspaces = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }
 
-    // Get personal workspaces owned by the user
-    const personalWorkspaces = await ctx.db
-      .query("workspaces")
-      .filter((q) => q.eq(q.field("ownerId"), userId))
+    const members = await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
       .collect();
 
-    // Get shared workspaces associated with those organizations
-    const sharedWorkspace = await getOrganizationalWorkspaces(ctx);
+    const workspaceIds = members.map((member) => member.workspaceId);
 
-    if (!sharedWorkspace) {
-      return { personal: personalWorkspaces, shared: [] };
+    const workspaces = [];
+
+    for (const workspaceId of workspaceIds) {
+      const workspace = await ctx.db.get(workspaceId);
+      if (workspace && workspace.archived === false) {
+        workspaces.push(workspace);
+      }
     }
 
-    // Collect IDs of shared workspaces
-    const sharedWorkspaceIds = new Set(
-      sharedWorkspace.flat().map((workspace) => workspace._id),
-    );
-
-    // Filter out personal workspaces that are also in shared workspaces
-    const filteredPersonalWorkspaces = personalWorkspaces.filter(
-      (workspace) => !sharedWorkspaceIds.has(workspace._id),
-    );
-
-    return {
-      personal: filteredPersonalWorkspaces,
-      shared: sharedWorkspace.flat(),
-    };
+    return workspaces;
   },
 });
-
-async function getOrganizationalWorkspaces(ctx: QueryCtx) {
-  const userId = await getAuthUserId(ctx);
-  if (userId === null) {
-    return;
-  }
-  const userOrganizations = await ctx.db
-    .query("userOrganizations")
-    .filter((q) => q.eq(q.field("userId"), userId))
-    .collect();
-
-  return asyncMap(userOrganizations, async (org) => {
-    const organizationalWorkspace = await ctx.db
-      .query("workspaces")
-      .filter((q) => q.eq(q.field("organizationId"), org.organizationId))
-      .collect();
-
-    return organizationalWorkspace;
-  });
-}
 
 export const getMostCurrentWordspace = query({
   handler: async (ctx) => {
@@ -118,39 +61,17 @@ export const getMostCurrentWordspace = query({
       return null;
     }
 
-    // Get the most recently updated workspace a user has access to
-    // Check for organizational workspaces
-    // Check for personal workspaces
-    // Return the most recently updated workspace
-
-    const organizationalWorkspaces = await getOrganizationalWorkspaces(ctx);
-
-    const personalWorkspace = await ctx.db
-      .query("workspaces")
-      .filter((q) => q.eq(q.field("ownerId"), userId))
+    const member = await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_user_id", (q) => q.eq("userId", userId))
       .first();
 
-    if (!organizationalWorkspaces) {
-      return;
+    if (!member) {
+      return null;
     }
 
-    if (!personalWorkspace) {
-      return;
-    }
+    const workspace = await ctx.db.get(member.workspaceId);
 
-    const sharedWorkspaces = organizationalWorkspaces.flat();
-
-    const sharedWorkspace = sharedWorkspaces.reduce((acc, workspace) => {
-      if (workspace.updatedAt > acc.updatedAt) {
-        return workspace;
-      }
-      return acc;
-    });
-
-    if (personalWorkspace.updatedAt > sharedWorkspace.updatedAt) {
-      return personalWorkspace._id;
-    } else {
-      return sharedWorkspace._id;
-    }
+    return workspace;
   },
 });
