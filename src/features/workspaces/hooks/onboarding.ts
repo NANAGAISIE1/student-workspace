@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -12,12 +12,11 @@ import { useOnboardingMutation } from "../api/onboarding";
 import { useWorkspaceStore } from "../store/workspace-store";
 
 export const useOnboardingForm = (totalSteps: number) => {
-  const [previousStep, setPreviousStep] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
-  const { setCurrentWorkspaceId } = useWorkspaceStore((state) => state);
+  const [step, setStep] = useState(0);
+  const prevStepRef = useRef(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { setCurrentWorkspaceId } = useWorkspaceStore();
   const router = useRouter();
-  const delta = currentStep - previousStep;
-  const toastId = "onboarding";
 
   const {
     register,
@@ -26,54 +25,72 @@ export const useOnboardingForm = (totalSteps: number) => {
     reset,
     trigger,
     setValue,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<OnboardingFormInputs>({
     resolver: zodResolver(onBoardingFormSchema),
     mode: "onChange",
+    defaultValues: {
+      workspaceType: undefined,
+      interests: [],
+    },
   });
 
   const onboardingMutation = useOnboardingMutation();
 
   const processForm: SubmitHandler<OnboardingFormInputs> = async (data) => {
-    const workspaceId = await onboardingMutation({
-      workspaceType: data.workspaceType,
-      interests: data.interests,
-    });
+    setIsSubmitting(true);
+    try {
+      const workspaceId = await onboardingMutation(data);
 
-    if (workspaceId) {
-      reset();
+      if (workspaceId === null) {
+        toast.error("Failed to create workspace. Please try again.");
+        setStep(0);
+        return;
+      }
+
       setCurrentWorkspaceId(workspaceId);
       router.push(`/app/${workspaceId}`);
+      reset();
+    } catch (error) {
+      console.error("Onboarding submission error:", error);
+      toast.error("Failed to complete onboarding. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const next = async () => {
-    const fields = stepFields[currentStep];
-    const valid = await trigger(fields, { shouldFocus: true });
-    if (!valid) {
-      toast.error("Please select at least one option");
+    const fields = stepFields[step];
+    const isStepValid = await trigger(fields);
+
+    if (!isStepValid) {
+      if (step === 0) {
+        toast.error("Please select a workspace type");
+      } else if (step === 1) {
+        toast.error("Please select at least one interest");
+      }
       return;
     }
 
-    const isLastStep = currentStep === totalSteps - 1;
-
-    if (isLastStep) {
-      await handleSubmit(processForm)();
+    if (step === totalSteps - 1) {
+      handleSubmit(processForm)();
     } else {
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step + 1);
+      prevStepRef.current = step;
+      setStep((prevStep) => prevStep + 1);
     }
   };
 
   const prev = () => {
-    if (currentStep > 0) {
-      setPreviousStep(currentStep);
-      setCurrentStep((step) => step - 1);
+    if (step > 0) {
+      prevStepRef.current = step;
+      setStep((prevStep) => prevStep - 1);
     }
   };
 
+  const delta = step - prevStepRef.current;
+
   return {
-    currentStep,
+    step,
     totalSteps,
     delta,
     register,
@@ -81,8 +98,10 @@ export const useOnboardingForm = (totalSteps: number) => {
     watch,
     setValue,
     errors,
+    isValid,
     next,
     prev,
+    isSubmitting,
     processForm,
   };
 };
