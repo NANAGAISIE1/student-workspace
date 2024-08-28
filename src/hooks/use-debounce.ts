@@ -1,4 +1,38 @@
-import * as React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+
+type Timer = ReturnType<typeof setTimeout>;
+
+export function useDebounceFull<T extends (...args: any[]) => any>(
+  callback: T,
+  delay: number,
+): (...args: Parameters<T>) => void {
+  const [timer, setTimer] = useState<Timer | null>(null);
+
+  const debouncedCallback = useCallback(
+    (...args: Parameters<T>) => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+
+      const newTimer = setTimeout(() => {
+        callback(...args);
+      }, delay);
+
+      setTimer(newTimer);
+    },
+    [callback, delay, timer],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [timer]);
+
+  return debouncedCallback;
+}
 
 export const useDebounce = <T>(value: T, delay = 500) => {
   const [debouncedValue, setDebouncedValue] = React.useState(value);

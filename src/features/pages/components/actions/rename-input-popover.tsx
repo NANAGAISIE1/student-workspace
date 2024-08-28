@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { debounce } from "lodash";
+import React, { useState, useCallback } from "react";
 import {
   Popover,
   PopoverContent,
@@ -8,6 +7,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useDebounceFull } from "@/hooks/use-debounce";
 
 interface RenameInputPopoverProps {
   currentName: string;
@@ -19,34 +19,33 @@ const RenameInputPopover: React.FC<RenameInputPopoverProps> = ({
   onRename,
 }) => {
   const [newName, setNewName] = useState(currentName);
-  const [open, isOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  // Debounce function to delay the onRename call
-  const debouncedRename = (value: string) =>
-    debounce(() => {
-      onRename(value);
-    }, 300);
+  const debouncedRename = useDebounceFull(onRename, 300);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setNewName(value);
-    debouncedRename(value);
-  };
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setNewName(value);
+      debouncedRename(value);
+    },
+    [debouncedRename],
+  );
 
   const handleBlur = () => {
     onRename(newName);
   };
 
   return (
-    <Popover open={open} onOpenChange={isOpen}>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           className="w-full justify-start space-x-2"
-          size={"sm"}
-          variant={"ghost"}
+          size="sm"
+          variant="ghost"
         >
           <NotebookPenIcon className="size-4" />
-          <p className="!mt-0">Rename</p>
+          <span>Rename</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -64,7 +63,7 @@ const RenameInputPopover: React.FC<RenameInputPopoverProps> = ({
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               onRename(newName);
-              isOpen(false);
+              setOpen(false);
             }
           }}
         />
