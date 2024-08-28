@@ -1,5 +1,4 @@
 "use client";
-
 import { UserProfileMenu } from "./user-profile-dropdown-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -7,36 +6,22 @@ import {
   HomeIcon,
   InboxIcon,
   PenBox,
-  Search,
   SettingsIcon,
+  Sparkles,
 } from "lucide-react";
-import WorkspaceAi from "./workspace-ai";
-import { useSearchStore } from "../dialogs/use-search-dialog";
 import { useSidebarStore } from "./use-sidebar";
 import Link from "next/link";
-import { useWorkspaceStore } from "../../[[...slug]]/_workspace/current-workspace-store";
 import { cn } from "@/lib/utils";
-import { usePathname, useRouter } from "next/navigation";
-import { useMutation } from "convex/react";
-import { api } from "@convex/api";
-import { Id } from "@convex/dataModel";
+import { usePathname } from "next/navigation";
+import SearchDialog from "@/features/workspaces/components/search-dialog";
+import { usePage } from "@/features/pages/hooks/use-page";
 
 type Props = {};
 
 const SidebarMenu = (props: Props) => {
-  const { toggleSearchDialog } = useSearchStore((state) => state);
   const { toggleSidebar } = useSidebarStore((state) => state);
-  const { workspaceId } = useWorkspaceStore((state) => state);
-  const createPage = useMutation(api.pages.mutation.createPage);
-  const router = useRouter();
+  const { createPage, storedWorkspaceId } = usePage();
   const pathname = usePathname();
-
-  const handleCreateDocument = async () => {
-    const documentId = await createPage({
-      workspaceId: workspaceId as Id<"workspaces">,
-    });
-    router.push(`/app/${workspaceId}/${documentId}`);
-  };
 
   return (
     <div className="flex flex-col space-y-2 px-2">
@@ -45,30 +30,25 @@ const SidebarMenu = (props: Props) => {
         <Button size={"icon"} variant={"ghost"} onClick={toggleSidebar}>
           <ArrowLeftToLineIcon className="h-4 w-4" />
         </Button>
-        <Button size={"icon"} variant={"ghost"} onClick={handleCreateDocument}>
+        <Button size={"icon"} variant={"ghost"} onClick={() => createPage()}>
           <PenBox className="h-4 w-4" />{" "}
         </Button>
       </div>
-      <Button
-        variant={"ghost"}
-        size={"sm"}
-        onClick={toggleSearchDialog}
-        className="justify-start"
-      >
-        <Search className="mr-2 h-4 w-4" />
-        <p className="!mt-0">Search...</p>
+      <SearchDialog />
+      <Button variant={"ghost"} size={"sm"} className="justify-start">
+        <Sparkles className="mr-2 h-4 w-4 text-vibrant-blue" />
+        <p className="!mt-0">Workspace AI</p>
       </Button>
-      <WorkspaceAi />
       <Link
         className={buttonVariants({
           className: cn(
             "!justify-start",
-            pathname === `/app/${workspaceId}` && "bg-accent",
+            pathname === `/app/${storedWorkspaceId}` && "bg-accent",
           ),
           variant: "ghost",
           size: "sm",
         })}
-        href={`/app/${workspaceId}`}
+        href={`/app/${storedWorkspaceId}`}
       >
         <HomeIcon className="mr-2 h-4 w-4" />
         <p className="!mt-0">Home</p>

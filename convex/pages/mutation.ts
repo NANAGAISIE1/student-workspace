@@ -1,44 +1,46 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation } from "../_generated/server";
 import { ConvexError, v } from "convex/values";
+import {
+  isAdmin,
+  recursiveArchive,
+  recursiveDeletion,
+  toggleSingleFavorite,
+} from "./helpers";
 
 export const createPage = mutation({
-  args: { workspaceId: v.id("workspaces") },
-  handler: async (ctx, { workspaceId }) => {
+  args: {
+    workspaceId: v.id("workspaces"),
+    parentId: v.optional(v.id("pages")),
+    type: v.union(v.literal("page"), v.literal("todo"), v.literal("calendar")),
+  },
+  handler: async (ctx, { workspaceId, parentId, type }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }
-    const document = await ctx.db.insert("pages", {
+
+    const admin = await isAdmin(ctx, workspaceId);
+
+    if (!admin) {
+      throw new ConvexError({
+        message: "You do not own this workspace",
+        status: 401,
+      });
+    }
+
+    const newPageId = await ctx.db.insert("pages", {
       creatorId: userId,
       workspaceId,
       title: "Untitled",
       updatedAt: Date.now(),
+      parentId,
+      archived: false,
+      lastEditedBy: userId,
+      type,
     });
 
-    return document;
-  },
-});
-
-export const addPageToFavorites = mutation({
-  args: {
-    pageId: v.id("pages"),
-    workspaceId: v.id("workspaces"),
-  },
-  handler: async (ctx, { pageId, workspaceId }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-
-    await ctx.db.insert("favoritePages", {
-      creatorId: userId,
-      pageId,
-      workspaceId,
-    });
-
-    await ctx.db.patch(pageId, { updatedAt: Date.now() });
-    return;
+    return newPageId;
   },
 });
 
@@ -50,127 +52,14 @@ export const toggleFavorite = mutation({
   handler: async (ctx, { pageId, workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return null;
+      throw new Error("User not authenticated");
     }
-
-    const favorite = await ctx.db
-      .query("favoritePages")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("pageId"), pageId),
-          q.eq(q.field("creatorId"), userId),
-        ),
-      )
-      .unique();
-
-    if (favorite) {
-      await ctx.db.delete(favorite._id);
-    } else {
-      await ctx.db.insert("favoritePages", {
-        creatorId: userId,
-        pageId,
-        workspaceId,
-      });
-    }
-
-    await ctx.db.patch(pageId, { updatedAt: Date.now() });
-    return;
+    await toggleSingleFavorite(ctx, pageId, userId, workspaceId);
+    return true;
   },
 });
 
-export const removePageFromFavorites = mutation({
-  args: {
-    pageId: v.id("pages"),
-  },
-  handler: async (ctx, { pageId }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-    const favoritePage = await ctx.db
-      .query("favoritePages")
-      .filter((q) => q.eq(q.field("pageId"), pageId))
-      .unique();
-
-    if (!favoritePage) return;
-
-    await ctx.db.delete(favoritePage._id);
-    await ctx.db.patch(pageId, { updatedAt: Date.now() });
-
-    return;
-  },
-});
-
-export const moveBackToPagesById = mutation({
-  args: {
-    pageId: v.id("deletedPages"),
-  },
-  handler: async (ctx, { pageId }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-
-    const deletedPage = await ctx.db.get(pageId);
-
-    if (!deletedPage) {
-      throw new ConvexError({ message: "Page not found", status: 404 });
-    }
-
-    await ctx.db.insert("pages", {
-      title: deletedPage.title,
-      workspaceId: deletedPage.workspaceId,
-      creatorId: deletedPage.creatorId,
-      content: deletedPage.content,
-      emoji: deletedPage.emoji,
-      updatedAt: Date.now(),
-    });
-
-    await ctx.db.delete(pageId);
-
-    return;
-  },
-});
-
-export const deletePagePermanentlyById = mutation({
-  args: {
-    pageId: v.id("deletedPages"),
-  },
-  handler: async (ctx, { pageId }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-
-    const deletedPage = await ctx.db.get(pageId);
-
-    if (!deletedPage) {
-      throw new ConvexError({ message: "Page not found", status: 404 });
-    }
-
-    await ctx.db.delete(pageId);
-    return;
-  },
-});
-
-export const renamePageById = mutation({
-  args: {
-    pageId: v.id("pages"),
-    title: v.string(),
-  },
-  handler: async (ctx, { pageId, title }) => {
-    const userId = await getAuthUserId(ctx);
-    if (userId === null) {
-      return null;
-    }
-
-    await ctx.db.patch(pageId, { title, updatedAt: Date.now() });
-
-    return;
-  },
-});
-
-export const addPageToDeleted = mutation({
+export const toggleArchivePage = mutation({
   args: {
     pageId: v.id("pages"),
   },
@@ -186,17 +75,87 @@ export const addPageToDeleted = mutation({
       throw new ConvexError({ message: "Page not found", status: 404 });
     }
 
-    const deleted = await ctx.db.insert("deletedPages", {
-      title: page.title,
-      workspaceId: page.workspaceId,
-      creatorId: page.creatorId,
-      content: page.content,
-      emoji: page.emoji,
+    const admin = await isAdmin(ctx, page.workspaceId);
+
+    if (!admin) {
+      throw new ConvexError({
+        message: "You do not have permission to archive this page",
+        status: 401,
+      });
+    }
+
+    if (page.archived) {
+      await recursiveArchive(ctx, pageId, userId, false);
+    } else {
+      await recursiveArchive(ctx, pageId, userId, true);
+    }
+    return pageId;
+  },
+});
+
+export const deletePagePermanentlyById = mutation({
+  args: {
+    pageId: v.id("pages"),
+  },
+  handler: async (ctx, { pageId }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const page = await ctx.db.get(pageId);
+
+    if (!page) {
+      throw new ConvexError({ message: "Page not found", status: 404 });
+    }
+
+    const admin = await isAdmin(ctx, page.workspaceId);
+
+    if (!admin) {
+      throw new ConvexError({
+        message: "You do not have permission to delte this page",
+        status: 401,
+      });
+    }
+
+    await recursiveDeletion(ctx, pageId, userId);
+
+    return;
+  },
+});
+
+export const renamePageById = mutation({
+  args: {
+    pageId: v.id("pages"),
+    title: v.string(),
+  },
+  handler: async (ctx, { pageId, title }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const page = await ctx.db.get(pageId);
+
+    if (!page) {
+      throw new ConvexError({ message: "Page not found", status: 404 });
+    }
+
+    const admin = await isAdmin(ctx, page.workspaceId);
+
+    if (!admin) {
+      throw new ConvexError({
+        message: "You do not have permission to rename this page",
+        status: 401,
+      });
+    }
+
+    await ctx.db.patch(pageId, {
+      title,
       updatedAt: Date.now(),
+      lastEditedBy: userId,
     });
 
-    await ctx.db.delete(pageId);
-
-    return deleted;
+    return;
   },
 });

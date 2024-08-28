@@ -4,7 +4,7 @@ import { Id } from "@convex/dataModel";
 import { useQueryWithStatus } from "@/services/convex-query";
 import { Construction, LayoutPanelTopIcon } from "lucide-react";
 import HomePageCarousel from "./carousel";
-import { TEMPLATES_UNDER_DEVELOPMENT } from "@/app/constansts/templates";
+import { TEMPLATES_UNDER_DEVELOPMENT } from "@/constants/under-development";
 
 type Props = {
   workspaceId: Id<"workspaces">;

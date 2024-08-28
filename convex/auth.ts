@@ -3,8 +3,8 @@ import Google from "@auth/core/providers/google";
 import { Anonymous } from "@convex-dev/auth/providers/Anonymous";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth } from "@convex-dev/auth/server";
-import { ResendOTP } from "./otp/resend";
-import { ResendOTPPasswordReset } from "./password_reset/otp";
+import { ResendOTPPasswordReset } from "./auth/password_reset/otp";
+import { ResendOTP } from "./auth/otp/resend";
 
 export const { auth, signIn, signOut, store } = convexAuth({
   providers: [

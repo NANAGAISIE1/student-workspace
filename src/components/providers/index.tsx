@@ -1,7 +1,9 @@
 "use client";
+
 import ConvexClientProvider from "./convex-client";
 import { PropsWithChildren } from "react";
 import { ThemeProvider } from "./theme";
+import Modals from "../global-modal";
 
 export function Providers({ children }: PropsWithChildren) {
   return (
@@ -11,7 +13,10 @@ export function Providers({ children }: PropsWithChildren) {
       enableSystem
       disableTransitionOnChange
     >
-      <ConvexClientProvider>{children}</ConvexClientProvider>
+      <ConvexClientProvider>
+        {children}
+        <Modals />
+      </ConvexClientProvider>
     </ThemeProvider>
   );
 }

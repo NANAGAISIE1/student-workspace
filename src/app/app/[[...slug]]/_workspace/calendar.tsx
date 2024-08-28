@@ -3,7 +3,7 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { CALENDAR_UNDER_DEVELOPMENT } from "@/app/constansts/templates";
+import { CALENDAR_UNDER_DEVELOPMENT } from "@/constants/under-development";
 import { CalendarIcon, Construction } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 

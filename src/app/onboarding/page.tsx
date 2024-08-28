@@ -1,8 +1,8 @@
-import Form from "./_components/onboarding-form";
+import Form from "./_components/onboarding";
 
 const OnboardingPage = () => {
   return (
-    <main className="w-full h-full flex flex-col justify-center items-center space-y-16 px-16 relative">
+    <main className="relative flex h-full w-full flex-col items-center justify-center space-y-16 px-16">
       <Form />
     </main>
   );

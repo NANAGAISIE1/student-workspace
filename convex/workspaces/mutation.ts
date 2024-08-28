@@ -1,29 +1,45 @@
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation } from "../_generated/server";
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
+import { asyncMap } from "convex-helpers";
 
 export const createWorkspace = mutation({
   args: {
-    name: v.string(),
-    type: v.union(v.literal("personal"), v.literal("organization")),
-    organizationId: v.optional(v.id("organizations")),
     members: v.optional(v.array(v.id("users"))),
+    name: v.string(),
+    ownerId: v.id("users"),
   },
-  handler: async (ctx, { name, type, organizationId, members }) => {
-    // const userId = await getAuthUserId(ctx);
-    // if (userId === null) {
-    //   return null;
-    // }
-    // const newMembers =
-    //   members?.flatMap((member) => {
-    //     return [member, userId];
-    //   }) || [];
-    // return void (await ctx.db.insert("workspaces", {
-    //   name,
-    //   type,
-    //   ownerId: userId,
-    //   organizationId,
-    //   members: newMembers, // Owner is added as the first member
-    //   updatedAt: Date.now(),
-    // }));
+  handler: async (ctx, { name, members, ownerId }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new ConvexError({ message: "User not authenticated", status: 401 });
+    }
+
+    const workspaceId = await ctx.db.insert("workspaces", {
+      name,
+      ownerId: userId,
+      updatedAt: Date.now(),
+      archived: false,
+      updatedBy: userId,
+      plan: "free",
+    });
+
+    await ctx.db.insert("workspaceMembers", {
+      workspaceId: workspaceId,
+      userId: ownerId,
+      role: "admin",
+    });
+
+    if (members) {
+      asyncMap(members, async (member) => {
+        await ctx.db.insert("workspaceMembers", {
+          workspaceId: workspaceId,
+          userId: member,
+          role: "member",
+        });
+      });
+    }
+
+    return workspaceId;
   },
 });

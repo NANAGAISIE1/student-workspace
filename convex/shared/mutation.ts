@@ -1,13 +1,14 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { mutation, MutationCtx } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "../_generated/dataModel";
 import { gettingStartedTemplate, interestsTemplates } from "./constants";
 import { asyncMap } from "modern-async";
+import { createWorkspace } from "../workspaces/mutation";
 
 export const onboarding = mutation({
   args: {
-    orgtype: v.union(
+    workspaceType: v.union(
       v.literal("college"),
       v.literal("team"),
       v.literal("personal"),
@@ -17,7 +18,7 @@ export const onboarding = mutation({
     ),
     members: v.optional(v.array(v.id("users"))),
   },
-  handler: async (ctx, { orgtype, interests, members }) => {
+  handler: async (ctx, { workspaceType, interests, members }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
@@ -26,34 +27,21 @@ export const onboarding = mutation({
     const user = await ctx.db.get(userId);
 
     if (user === null) {
-      return null;
+      throw new ConvexError({ message: "User not found", status: 404 });
     }
 
-    const createOrg = await ctx.db.insert("organizations", {
-      name: `${orgtype.charAt(0).toUpperCase() + orgtype.slice(1)}`,
-      type: orgtype,
-      ownerId: userId,
-      updatedAt: Date.now(),
+    const capitalizeFirstLetter = (string: string) =>
+      string.charAt(0).toUpperCase() + string.slice(1);
+
+    const workspaceId = await createWorkspace(ctx, {
       members: members,
-    });
-
-    if (orgtype !== "personal") {
-      await ctx.db.insert("userOrganizations", {
-        userId,
-        organizationId: createOrg,
-        role: "admin",
-      });
-    }
-
-    const createWorkspace = await ctx.db.insert("workspaces", {
-      name: `${orgtype.charAt(0).toUpperCase() + orgtype.slice(1)}`,
+      name: capitalizeFirstLetter(workspaceType),
       ownerId: userId,
-      organizationId: createOrg,
-      updatedAt: Date.now(),
     });
-    void (await uploadPages(ctx, createWorkspace, interests));
 
-    return createWorkspace;
+    await uploadPages(ctx, workspaceId, interests);
+
+    return workspaceId;
   },
 });
 
@@ -78,6 +66,9 @@ async function uploadPages(
       content: template.content,
       emoji: template.emoji,
       updatedAt: Date.now(),
+      type: template.type,
+      archived: false,
+      lastEditedBy: userId,
     });
   });
 }

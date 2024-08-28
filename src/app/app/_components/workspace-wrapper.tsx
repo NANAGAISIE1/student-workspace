@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 import { useSidebarStore } from "./sidebar/use-sidebar";
@@ -7,7 +8,7 @@ const WorkspaceWrapper = ({ children }: { children: React.ReactNode }) => {
   const { isSidebarOpen } = useSidebarStore((state) => state);
   return (
     <motion.main
-      className="flex-1 h-full overflow-hidden"
+      className="h-full flex-1 overflow-hidden"
       initial={false}
       animate={{
         marginLeft: isSidebarOpen ? "18rem" : "0",

@@ -1,7 +1,7 @@
 import { v } from "convex/values";
 import { query } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { asyncMap } from "convex-helpers";
+import { isMember } from "./helpers";
 
 export const getPageById = query({
   args: {
@@ -10,8 +10,9 @@ export const getPageById = query({
   handler: async (ctx, { pageId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return null;
+      return;
     }
+
     const page = await ctx.db.get(pageId);
 
     return page;
@@ -23,12 +24,19 @@ export const getPagesByWorkspaceId = query({
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return null;
+      return;
+    }
+
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
     }
 
     const allPages = await ctx.db
       .query("pages")
-      .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
+      .filter((q) => q.eq(q.field("archived"), false))
       .collect();
 
     return allPages;
@@ -43,12 +51,31 @@ export const getPrivatePagesByWorkspaceId = query({
       return null;
     }
 
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
     const allPages = await ctx.db
       .query("pages")
-      .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+      .withIndex("by_workspace", (q) => q.eq("workspaceId", workspaceId))
+      .filter((q) => q.eq(q.field("archived"), false))
       .collect();
 
-    return allPages;
+    const privatePage = [];
+    for (const page of allPages) {
+      const sharedPage = await ctx.db
+        .query("sharedPages")
+        .filter((q) => q.eq(q.field("pageId"), page._id))
+        .unique();
+
+      if (!sharedPage) {
+        privatePage.push(page);
+      }
+    }
+
+    return privatePage;
   },
 });
 
@@ -60,19 +87,27 @@ export const getSharedPagesByWorkspaceId = query({
       return null;
     }
 
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
     const sharedPages = await ctx.db
       .query("sharedPages")
       .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
       .collect();
 
-    const unFlatenedPages = asyncMap(sharedPages, async (page) => {
-      const pages = await ctx.db.get(page.pageId);
-      return pages;
-    });
+    const pages = [];
 
-    const allPages = (await unFlatenedPages).flat();
+    for (const page of sharedPages) {
+      const sharedPage = await ctx.db.get(page.pageId);
+      if (sharedPage) {
+        pages.push(sharedPage);
+      }
+    }
 
-    return allPages;
+    return pages;
   },
 });
 
@@ -84,27 +119,47 @@ export const getFavoritePagesByWorkspaceId = query({
       return null;
     }
 
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
     const favoritePages = await ctx.db
       .query("favoritePages")
-      .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("creatorId"), userId),
+          q.eq(q.field("workspaceId"), workspaceId),
+        ),
+      )
       .collect();
 
-    const unFlatenedPages = asyncMap(favoritePages, async (page) => {
-      const pages = await ctx.db.get(page.pageId);
-      return pages;
-    });
+    const pageIds = favoritePages.map((fp) => fp.pageId);
 
-    const allPages = (await unFlatenedPages).flat();
+    const pages = await ctx.db
+      .query("pages")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("workspaceId"), workspaceId),
+          q.or(
+            q.eq(q.field("archived"), false),
+            q.eq(q.field("archived"), undefined),
+          ),
+        ),
+      )
+      .collect();
 
-    return allPages;
+    return pages.filter((page) => pageIds.includes(page._id));
   },
 });
 
 export const getFavoriteStatus = query({
   args: {
     pageId: v.id("pages"),
+    workspaceId: v.id("workspaces"),
   },
-  handler: async (ctx, { pageId }) => {
+  handler: async (ctx, { pageId, workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
@@ -116,15 +171,16 @@ export const getFavoriteStatus = query({
         q.and(
           q.eq(q.field("pageId"), pageId),
           q.eq(q.field("creatorId"), userId),
+          q.eq(q.field("workspaceId"), workspaceId),
         ),
       )
       .unique();
 
-    return favorite ? true : false;
+    return favorite !== null;
   },
 });
 
-export const getDeletedPageInTrashByWorkspaceId = query({
+export const getArchivedPagesByWorkspaceId = query({
   args: { workspaceId: v.id("workspaces") },
   handler: async (ctx, { workspaceId }) => {
     const userId = await getAuthUserId(ctx);
@@ -132,11 +188,53 @@ export const getDeletedPageInTrashByWorkspaceId = query({
       return null;
     }
 
-    const deletedPages = await ctx.db
-      .query("deletedPages")
-      .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
+    const archivedPages = await ctx.db
+      .query("pages")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("workspaceId"), workspaceId),
+          q.eq(q.field("archived"), true),
+        ),
+      )
       .collect();
 
-    return deletedPages;
+    return archivedPages;
+  },
+});
+
+export const getPagesByParentPage = query({
+  args: {
+    parentPageId: v.optional(v.id("pages")),
+    workspaceId: v.id("workspaces"),
+  },
+  handler: async (ctx, { parentPageId, workspaceId }) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (userId === null) {
+      return null;
+    }
+
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
+    const pages = await ctx.db
+      .query("pages")
+      .withIndex("by_workspace_id_parent_id", (q) =>
+        q.eq("workspaceId", workspaceId).eq("parentId", parentPageId),
+      )
+      .filter((q) => q.eq(q.field("archived"), false))
+      .order("desc")
+      .collect();
+
+    return pages;
   },
 });
