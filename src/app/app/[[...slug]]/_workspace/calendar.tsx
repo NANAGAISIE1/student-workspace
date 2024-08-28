@@ -17,13 +17,11 @@ export const Timeline = () => {
       <div className="flex h-full w-full flex-col space-y-6">
         <div className="flex items-center space-x-2">
           <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-          <p className="!mt-0 text-sm text-muted-foreground">
-            Featured templates
-          </p>
+          <p className="!mt-0 text-sm text-muted-foreground">Upcoming events</p>
         </div>
         <div className="flex h-full w-full flex-1 flex-col items-center justify-center">
           <Construction className="h-40 w-40 items-center justify-center text-muted-foreground" />
-          <p className="text-muted-foreground">Calendar is under development</p>
+          <p className="text-muted-foreground">Events is under development</p>
         </div>
       </div>
     );

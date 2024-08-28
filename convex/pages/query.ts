@@ -107,6 +107,10 @@ export const getSharedPagesByWorkspaceId = query({
       }
     }
 
+    if (pages.length === 0) {
+      return null;
+    }
+
     return pages;
   },
 });

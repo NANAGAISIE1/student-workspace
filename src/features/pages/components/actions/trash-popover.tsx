@@ -52,7 +52,7 @@ const TrashPopover = (props: Props) => {
           onClick={() => setOpen(!open)}
         >
           <Trash2Icon className="mr-2 h-4 w-4" />
-          <p className="!mt-0">Trash</p>
+          <span className="!mt-0">Trash</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -70,7 +70,7 @@ const TrashPopover = (props: Props) => {
           <CommandList className="relative h-full space-y-3">
             <CommandEmpty className="absolute inset-x-0 flex h-full w-full flex-col items-center justify-center">
               <Trash2Icon className="h-16 w-16" />
-              No results.
+              <span>No results.</span>
             </CommandEmpty>
             <CommandGroup>
               <div className="flex flex-col space-y-2 py-2">

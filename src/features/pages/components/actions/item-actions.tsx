@@ -75,7 +75,6 @@ export const PageItemActions: React.FC<{
     <Popover open={open} onOpenChange={setOpen}>
       <Hints
         message="Delete, rename and more"
-        asChild
         className="text-xs"
         side="bottom"
         align="center"
