@@ -47,8 +47,8 @@ const FavoritePageNav = () => {
       ) : (
         <PageNavigation
           data={favoritePages}
-          workspaceId={workspaceId}
           title="Favorites"
+          isFavoriteSection
         />
       )}
     </>

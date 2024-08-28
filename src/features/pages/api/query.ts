@@ -131,11 +131,18 @@ export const usePageQueries = () => {
     };
   };
 
-  const useGetFavoriteStatus = (pageId: Id<"pages">) => {
+  const useGetFavoriteStatus = (
+    pageId: Id<"pages">,
+    workspaceId?: Id<"workspaces">,
+  ) => {
+    const workspaceIdToUse = workspaceId
+      ? workspaceId
+      : (storedWorkspaceID as Id<"workspaces">);
     const { data, error, isError, isPending } = useQueryWithStatus(
       api.pages.query.getFavoriteStatus,
       {
         pageId: pageId,
+        workspaceId: workspaceIdToUse,
       },
     );
 

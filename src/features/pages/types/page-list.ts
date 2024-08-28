@@ -5,4 +5,5 @@ export type PageItemProps = {
   level: number;
   allPages: Doc<"pages">[];
   workspaceId: Id<"workspaces">;
+  isFavoriteSection?: boolean;
 };

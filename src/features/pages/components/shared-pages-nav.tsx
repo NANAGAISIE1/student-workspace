@@ -45,13 +45,7 @@ const SharedPagesNav = () => {
           </li>
         </ul>
       ) : (
-        sharedPages && (
-          <PageNavigation
-            data={sharedPages}
-            workspaceId={workspaceId}
-            title="Favorites"
-          />
-        )
+        sharedPages && <PageNavigation data={sharedPages} title="Favorites" />
       )}
     </>
   );

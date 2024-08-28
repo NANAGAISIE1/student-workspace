@@ -138,17 +138,12 @@ export const usePage = () => {
       workspaceId: workspaceIdToUse,
     });
 
-    if (istoggleFavoritePending) {
-      toast.loading("Toggling favorite...", { id: toastId });
-    }
-
     if (istoggleFavoriteError) {
-      toast.error("Failed to toggle favorite", { id: toastId });
+      toast.error("Something went wrong", { id: toastId });
       console.log(toggleFavoriteError);
     }
 
     if (toggleFavoritePageId) {
-      toast.success("Favorite toggled", { id: toastId });
       return toggleFavoritePageId;
     }
   };

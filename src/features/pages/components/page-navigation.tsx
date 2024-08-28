@@ -11,7 +11,8 @@ import { usePage } from "../hooks/use-page";
 const PageNavigation: React.FC<{
   data: Doc<"pages">[];
   title: string;
-}> = ({ data, title }) => {
+  isFavoriteSection?: boolean;
+}> = ({ data, title, isFavoriteSection }) => {
   const { storedWorkspaceId: workspaceId } = usePage();
   const [open, setOpen] = useState<boolean>(() => {
     // Try to get the initial state from localStorage
@@ -24,7 +25,9 @@ const PageNavigation: React.FC<{
     return false;
   });
 
-  const rootPages = data.filter((page) => !page.parentId);
+  const rootPages = isFavoriteSection
+    ? data
+    : data.filter((page) => !page.parentId);
 
   useEffect(() => {
     // Save the state to localStorage whenever it changes
@@ -78,6 +81,7 @@ const PageNavigation: React.FC<{
                 node={node}
                 level={0}
                 workspaceId={workspaceId}
+                isFavoriteSection={isFavoriteSection}
               />
             ))}
           </motion.ul>

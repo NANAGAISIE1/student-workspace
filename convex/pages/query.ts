@@ -127,31 +127,39 @@ export const getFavoritePagesByWorkspaceId = query({
 
     const favoritePages = await ctx.db
       .query("favoritePages")
-      .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("creatorId"), userId),
+          q.eq(q.field("workspaceId"), workspaceId),
+        ),
+      )
       .collect();
 
-    const pages = [];
+    const pageIds = favoritePages.map((fp) => fp.pageId);
 
-    for (const page of favoritePages) {
-      const favoritePage = await ctx.db
-        .query("pages")
-        .withIndex("by_id", (q) => q.eq("_id", page.pageId))
-        .filter((q) => q.eq(q.field("archived"), false))
-        .unique();
-      if (favoritePage) {
-        pages.push(favoritePage);
-      }
-    }
+    const pages = await ctx.db
+      .query("pages")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("workspaceId"), workspaceId),
+          q.or(
+            q.eq(q.field("archived"), false),
+            q.eq(q.field("archived"), undefined),
+          ),
+        ),
+      )
+      .collect();
 
-    return pages;
+    return pages.filter((page) => pageIds.includes(page._id));
   },
 });
 
 export const getFavoriteStatus = query({
   args: {
     pageId: v.id("pages"),
+    workspaceId: v.id("workspaces"),
   },
-  handler: async (ctx, { pageId }) => {
+  handler: async (ctx, { pageId, workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
@@ -163,11 +171,12 @@ export const getFavoriteStatus = query({
         q.and(
           q.eq(q.field("pageId"), pageId),
           q.eq(q.field("creatorId"), userId),
+          q.eq(q.field("workspaceId"), workspaceId),
         ),
       )
       .unique();
 
-    return favorite ? true : false;
+    return favorite !== null;
   },
 });
 

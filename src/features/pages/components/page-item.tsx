@@ -15,6 +15,7 @@ export const PageItem: React.FC<PageItemProps> = ({
   level,
   workspaceId,
   allPages,
+  isFavoriteSection = false,
 }) => {
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const { createPage } = usePage();
@@ -86,27 +87,29 @@ export const PageItem: React.FC<PageItemProps> = ({
         </Link>
         <div className="flex items-center pr-2">
           <PageItemActions nodeId={node._id} workspaceId={workspaceId} />
-          <Hints
-            message="Add a page inside"
-            asChild
-            className="text-xs"
-            side="bottom"
-            align="center"
-          >
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-2 opacity-0 group-hover:opacity-100"
-              onClick={() => createPage(workspaceId, node._id)}
+          {!isFavoriteSection && (
+            <Hints
+              message="Add a page inside"
+              asChild
+              className="text-xs"
+              side="bottom"
+              align="center"
             >
-              <PlusIcon className="size-4" />
-            </Button>
-          </Hints>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 opacity-0 group-hover:opacity-100"
+                onClick={() => createPage(workspaceId, node._id)}
+              >
+                <PlusIcon className="size-4" />
+              </Button>
+            </Hints>
+          )}
         </div>
       </span>
 
       <AnimatePresence>
-        {expanded[node._id] && hasChildren && (
+        {expanded[node._id] && hasChildren && !isFavoriteSection && (
           <motion.ul
             initial={{ height: 0 }}
             animate={{ height: "auto" }}
@@ -121,6 +124,7 @@ export const PageItem: React.FC<PageItemProps> = ({
                 level={level + 1}
                 workspaceId={workspaceId}
                 allPages={allPages}
+                isFavoriteSection={isFavoriteSection}
               />
             ))}
           </motion.ul>

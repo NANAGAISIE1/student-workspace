@@ -104,51 +104,91 @@ export const recursiveDeletion = async (
   return;
 };
 
-export const recursiveFavorite = async (
+export async function toggleSingleFavorite(
+  ctx: MutationCtx,
+  pageId: Id<"pages">,
+  userId: Id<"users">,
+  workspaceId: Id<"workspaces">,
+) {
+  const favorite = await ctx.db
+    .query("favoritePages")
+    .filter((q) =>
+      q.and(
+        q.eq(q.field("pageId"), pageId),
+        q.eq(q.field("workspaceId"), workspaceId),
+      ),
+    )
+    .unique();
+
+  if (favorite) {
+    await ctx.db.delete(favorite._id);
+  } else {
+    await ctx.db.insert("favoritePages", {
+      creatorId: userId,
+      pageId,
+      workspaceId,
+    });
+  }
+
+  await ctx.db.patch(pageId, {
+    updatedAt: Date.now(),
+    lastEditedBy: userId,
+  });
+}
+
+export const recursiveToggleFavorite = async (
   ctx: MutationCtx,
   pageId: Id<"pages">,
   userId: Id<"users">,
   workspaceId: Id<"workspaces">,
 ) => {
-  const toggleFavorite = async (pageId: Id<"pages">) => {
-    const favorite = await ctx.db
-      .query("favoritePages")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("pageId"), pageId),
-          q.eq(q.field("creatorId"), userId),
-        ),
-      )
-      .unique();
+  // First, toggle the favorite status of the current page
+  await toggleFavoriteStatus(ctx, pageId, userId, workspaceId);
 
-    if (favorite) {
-      await ctx.db.delete(favorite._id);
-    } else {
-      await ctx.db.insert("favoritePages", {
-        creatorId: userId,
-        pageId,
-        workspaceId,
-      });
-    }
+  // Then, get all child pages and recursively toggle their favorite status
+  const childPages = await ctx.db
+    .query("pages")
+    .withIndex("by_parent", (q) => q.eq("parentId", pageId))
+    .collect();
 
-    await ctx.db.patch(pageId, {
-      updatedAt: Date.now(),
-      lastEditedBy: userId,
+  // Recursively toggle favorite status for all child pages
+  for (const childPage of childPages) {
+    await recursiveToggleFavorite(ctx, childPage._id, userId, workspaceId);
+  }
+};
+
+const toggleFavoriteStatus = async (
+  ctx: MutationCtx,
+  pageId: Id<"pages">,
+  userId: Id<"users">,
+  workspaceId: Id<"workspaces">,
+) => {
+  // Check if the page is already a favorite
+  const existingFavorite = await ctx.db
+    .query("favoritePages")
+    .filter((q) =>
+      q.and(
+        q.eq(q.field("pageId"), pageId),
+        q.eq(q.field("workspaceId"), workspaceId),
+      ),
+    )
+    .unique();
+
+  if (existingFavorite) {
+    // If it is already a favorite, remove it
+    await ctx.db.delete(existingFavorite._id);
+  } else {
+    // Otherwise, add it as a favorite
+    await ctx.db.insert("favoritePages", {
+      pageId,
+      creatorId: userId,
+      workspaceId,
     });
-  };
+  }
 
-  const recursiveToggle = async (pageId: Id<"pages">) => {
-    await toggleFavorite(pageId);
-
-    const children = await ctx.db
-      .query("pages")
-      .filter((q) => q.eq(q.field("parentId"), pageId))
-      .collect();
-
-    for (const child of children) {
-      await recursiveToggle(child._id);
-    }
-  };
-
-  await recursiveToggle(pageId);
+  // Update the page's last edited details
+  await ctx.db.patch(pageId, {
+    updatedAt: Date.now(),
+    lastEditedBy: userId,
+  });
 };

@@ -44,13 +44,7 @@ const PrivatePagesNav = () => {
           </li>
         </ul>
       ) : (
-        privatePages && (
-          <PageNavigation
-            data={privatePages}
-            workspaceId={workspaceId}
-            title="Private"
-          />
-        )
+        privatePages && <PageNavigation data={privatePages} title="Private" />
       )}
     </>
   );

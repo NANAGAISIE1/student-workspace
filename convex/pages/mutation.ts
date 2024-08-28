@@ -5,7 +5,7 @@ import {
   isAdmin,
   recursiveArchive,
   recursiveDeletion,
-  recursiveFavorite,
+  toggleSingleFavorite,
 } from "./helpers";
 
 export const createPage = mutation({
@@ -52,11 +52,10 @@ export const toggleFavorite = mutation({
   handler: async (ctx, { pageId, workspaceId }) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
-      return null;
+      throw new Error("User not authenticated");
     }
-
-    await recursiveFavorite(ctx, pageId, userId, workspaceId);
-    return;
+    await toggleSingleFavorite(ctx, pageId, userId, workspaceId);
+    return true;
   },
 });
 
