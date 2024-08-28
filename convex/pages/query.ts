@@ -154,7 +154,15 @@ export const getFavoritePagesByWorkspaceId = query({
       )
       .collect();
 
-    return pages.filter((page) => pageIds.includes(page._id));
+    const filteredFavoritePages = pages.filter((page) =>
+      pageIds.includes(page._id),
+    );
+
+    if (filteredFavoritePages.length === 0) {
+      return null;
+    }
+
+    return filteredFavoritePages;
   },
 });
 

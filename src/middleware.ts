@@ -41,8 +41,6 @@ export default convexAuthNextjsMiddleware(async (request) => {
       { token: convexAuthNextjsToken() },
     );
 
-    console.log("workspace", workspace);
-
     if (workspaceRoute(request) && workspace === null) {
       return nextjsMiddlewareRedirect(request, "/onboarding");
     }
