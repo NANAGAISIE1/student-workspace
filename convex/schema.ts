@@ -66,11 +66,11 @@ const schema = defineSchema({
     .index("by_workspace_id_user_id", ["workspaceId", "creatorId"])
     .index("by_workspace_id_parent_id", ["workspaceId", "parentId"])
     .index("by_parent", ["parentId"])
-    .searchIndex("search_content", {
-      searchField: "content",
-    })
     .searchIndex("search_title", {
       searchField: "title",
+    })
+    .searchIndex("search_content", {
+      searchField: "content",
     })
     .searchIndex("search_emoji", {
       searchField: "emoji",

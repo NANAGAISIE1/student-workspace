@@ -21,7 +21,7 @@ import { toast } from "sonner";
 import RenameInputPopover from "./rename-input-popover";
 import { formatRelative } from "date-fns";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Hints from "@/components/hints";
 import { usePage } from "../../hooks/use-page";
 import { useUser } from "@/features/auth/api/users";
@@ -44,6 +44,7 @@ export const PageItemActions: React.FC<{
   const { user } = useUser();
   const { page } = usePageById(nodeId);
   const { favorite } = useFavoriteStatus(nodeId);
+  const pathname = usePathname();
 
   const removePage = async () => {
     await archivePage(nodeId);
@@ -54,7 +55,9 @@ export const PageItemActions: React.FC<{
         onClick: async () => await archivePage(nodeId),
       },
     });
-    router.push(`/app/${workspaceId}`);
+    if (pathname === `/app/${workspaceId}/${nodeId}`) {
+      router.push(`/app/${workspaceId}`);
+    }
     setOpen(false);
   };
 

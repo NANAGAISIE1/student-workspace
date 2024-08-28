@@ -1,50 +1,97 @@
+import React, { useState } from "react";
 import {
+  Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
 } from "@/components/ui/command";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { UserIcon } from "lucide-react";
+import { usePageQueries } from "@/features/pages/api/query";
+import { CommandLoading } from "cmdk";
+import { FileIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useWorkspaceStore } from "../store/workspace-store";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Doc } from "@convex/dataModel";
+import { useModalStore } from "@/components/global-modal";
+import { useFormattedSearchResults } from "@/hooks/format-string";
 
 type Props = {};
 
-const SearchCommandModal = (props: Props) => {
+const SearchCommandModal: React.FC<Props> = () => {
+  const [search, setSearch] = useState("");
+  const { useWorkspaceSearch } = usePageQueries();
+  const { workspaceId } = useWorkspaceStore();
+  const router = useRouter();
+  const { closeModal } = useModalStore((state) => state);
+
+  const { searchResults, isPending } = useWorkspaceSearch(search);
+
+  const { formatTitle, filteredResults } = useFormattedSearchResults(
+    searchResults as Doc<"pages">[],
+    search,
+  );
+
+  if (!workspaceId) {
+    return null;
+  }
+
   return (
-    <>
+    <Command>
       <DialogTitle className="sr-only">Search</DialogTitle>
       <DialogDescription className="sr-only">
-        Search workspace.
+        Search workspace
       </DialogDescription>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList className="h-full overflow-y-hidden">
-        <CommandEmpty>No results found.</CommandEmpty>
-        <ScrollArea className="flex h-[300px] w-full flex-col">
-          <CommandGroup heading="Suggestions">
-            {/* {documents?.map((document, index) => (
+      <CommandInput placeholder="Type to search..." onValueChange={setSearch} />
+      <CommandList>
+        <ScrollArea className="h-[300px]">
+          <CommandEmpty>No results found.</CommandEmpty>
+
+          {isPending && (
+            <CommandLoading className="flex items-start justify-start">
+              <div className="space-y-2 p-4">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+              </div>
+            </CommandLoading>
+          )}
+          <CommandGroup heading="Pages">
+            {filteredResults.map((result) => (
               <CommandItem
-                key={document.createdAt.getTime()}
-                onSelect={() => handleSelect(index)}
-                // onClick={() => handleSelect(index)}
+                key={result._id}
+                value={result.title}
+                onSelect={() => {
+                  router.push(`/app/${workspaceId}/${result._id}`);
+                  closeModal("search-dialog");
+                }}
+                onClick={() => {
+                  router.push(`/app/${workspaceId}/${result._id}`);
+                  closeModal("search-dialog");
+                }}
+                className="flex cursor-pointer items-center space-x-2 p-2"
               >
-                <Calendar className="mr-2 h-4 w-4" />
-                <span>{document.title}</span>
+                {result.emoji ? (
+                  <span className="text-xl">{result.emoji}</span>
+                ) : (
+                  <FileIcon className="h-4 w-4" />
+                )}
+                <div className="flex flex-col">
+                  <span>{formatTitle(result.title)}</span>
+                  {result.content && (
+                    <span className="text-sm text-muted-foreground">
+                      {result.content.slice(0, 50)}...
+                    </span>
+                  )}
+                </div>
               </CommandItem>
-            ))} */}
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <UserIcon className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </CommandItem>
+            ))}
           </CommandGroup>
         </ScrollArea>
       </CommandList>
-    </>
+    </Command>
   );
 };
 
