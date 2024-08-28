@@ -9,10 +9,12 @@ import {
   stepFields,
 } from "../types/onboarding-form-schema";
 import { useOnboardingMutation } from "../api/onboarding";
+import { useWorkspaceStore } from "../store/workspace-store";
 
 export const useOnboardingForm = (totalSteps: number) => {
   const [previousStep, setPreviousStep] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const { setCurrentWorkspaceId } = useWorkspaceStore((state) => state);
   const router = useRouter();
   const delta = currentStep - previousStep;
   const toastId = "onboarding";
@@ -30,35 +32,18 @@ export const useOnboardingForm = (totalSteps: number) => {
     mode: "onChange",
   });
 
-  const {
-    isPending,
-    isError,
-    isSuccess,
-    data: workspaceId,
-    mutate: sendOnboardingForm,
-  } = useOnboardingMutation();
+  const onboardingMutation = useOnboardingMutation();
 
   const processForm: SubmitHandler<OnboardingFormInputs> = async (data) => {
-    sendOnboardingForm({
+    const workspaceId = await onboardingMutation({
       workspaceType: data.workspaceType,
       interests: data.interests,
     });
 
-    if (isSuccess) {
+    if (workspaceId) {
       reset();
+      setCurrentWorkspaceId(workspaceId);
       router.push(`/app/${workspaceId}`);
-    }
-
-    if (isPending) {
-      toast.loading("Creating workspace...", {
-        id: toastId,
-      });
-    }
-
-    if (isError) {
-      toast.error("Failed to create workspace. Please try again", {
-        id: toastId,
-      });
     }
   };
 

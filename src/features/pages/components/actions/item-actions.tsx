@@ -1,3 +1,5 @@
+"use client";
+
 import { Icons } from "@/components/icons";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -65,7 +67,7 @@ export const PageItemActions: React.FC<{
     setOpen(false);
   };
 
-  if (!page) return;
+  if (!page) return null;
 
   const updatedAt = formatRelative(page.updatedAt, new Date());
 
@@ -80,8 +82,8 @@ export const PageItemActions: React.FC<{
       >
         <PopoverTrigger asChild>
           <Button
-            variant={"ghost"}
-            size={"sm"}
+            variant="ghost"
+            size="sm"
             className="p-2 opacity-0 group-hover:opacity-100"
           >
             <MoreHorizontal className="size-4" />
@@ -95,46 +97,46 @@ export const PageItemActions: React.FC<{
       >
         <Button
           className="w-full justify-start space-x-2"
-          size={"sm"}
-          variant={"ghost"}
+          size="sm"
+          variant="ghost"
           onClick={toggleFavorite}
         >
           {favorite ? (
             <>
               <Icons.RemoveFavoriteIcon className="size-4" />
-              <p className="!mt-0">Remove from favorites</p>
+              <span>Remove from favorites</span>
             </>
           ) : (
             <>
               <StarIcon className="size-4" />
-              <p className="!mt-0">Add to favorites</p>
+              <span>Add to favorites</span>
             </>
           )}
         </Button>
         <Separator />
         <Button
           className="w-full justify-start space-x-2"
-          size={"sm"}
-          variant={"ghost"}
+          size="sm"
+          variant="ghost"
           onClick={() => {
             navigator.clipboard.writeText(window.location.href);
             toast.success("Link copied to clipboard");
           }}
         >
           <LinkIcon className="size-4" />
-          <p className="!mt-0">Copy link</p>
+          <span>Copy link</span>
         </Button>
         {page && (
           <RenameInputPopover currentName={page.title} onRename={renamePage} />
         )}
         <Button
           className="w-full justify-start space-x-2"
-          size={"sm"}
-          variant={"ghost"}
+          size="sm"
+          variant="ghost"
           onClick={removePage}
         >
           <TrashIcon className="size-4" />
-          <span className="!mt-0">Move to trash</span>
+          <span>Move to trash</span>
         </Button>
         <Separator />
         <Link
@@ -147,13 +149,13 @@ export const PageItemActions: React.FC<{
           target="_blank"
         >
           <ArrowUpRightIcon className="size-4" />
-          <span className="!mt-0">Open in new tab</span>
+          <span>Open in new tab</span>
         </Link>
         <Separator />
         <div className="flex flex-col">
-          <p className="!mt-0 text-sm text-muted-foreground">
+          <span className="text-sm text-muted-foreground">
             Last edited by {user?.name}
-          </p>
+          </span>
           <span className="text-sm text-muted-foreground">{updatedAt}</span>
         </div>
       </PopoverContent>

@@ -13,26 +13,25 @@ const PrivatePagesNav = () => {
   const { workspaceId: storedWorkspaceId } = useWorkspaceStore(
     (state) => state,
   );
+
+  // Extract workspaceId from pathname or use the stored one
+  const workspaceId = (pathname.split("/")[2] ||
+    storedWorkspaceId) as Id<"workspaces">;
+
   const {
     pages: privatePages,
     isPending,
     error,
     isError,
-  } = usePrivatePagesByWorkspaceId();
-
-  let workspaceId = pathname.split("/")[2] as Id<"workspaces">;
-
-  if (!workspaceId) {
-    workspaceId = storedWorkspaceId as Id<"workspaces">;
-  }
-
-  if (privatePages?.length === 0 || !privatePages) {
-    return null;
-  }
+  } = usePrivatePagesByWorkspaceId(workspaceId);
 
   if (isError) {
     toast.error("Failed to fetch your private pages");
     console.error(error);
+  }
+
+  if (!privatePages?.length) {
+    return null;
   }
 
   return (
@@ -44,7 +43,11 @@ const PrivatePagesNav = () => {
           </li>
         </ul>
       ) : (
-        privatePages && <PageNavigation data={privatePages} title="Private" />
+        <PageNavigation
+          data={privatePages}
+          title="Private"
+          workspaceId={workspaceId}
+        />
       )}
     </>
   );

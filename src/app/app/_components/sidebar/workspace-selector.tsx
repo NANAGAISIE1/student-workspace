@@ -7,12 +7,17 @@ import {
 import { Doc } from "@convex/dataModel";
 import { CheckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { capitalizeFirstLetter } from "@/lib/utils";
+
+interface WorkspaceSelector extends Doc<"workspaces"> {
+  members: number;
+}
 
 export function WorkspaceSelector({
   workspace,
   user,
 }: {
-  workspace: Doc<"workspaces">;
+  workspace: WorkspaceSelector;
   user: Doc<"users">;
 }) {
   const router = useRouter();
@@ -26,8 +31,8 @@ export function WorkspaceSelector({
         className="flex items-center justify-between space-x-3"
         key={workspace._id}
         onClick={() => {
-          router.push(`/app/${workspace._id}`);
           setCurrentWorkspaceId(workspace._id);
+          router.push(`/app/${workspace._id}`);
         }}
       >
         <div className="flex items-center justify-start space-x-3">
@@ -38,7 +43,8 @@ export function WorkspaceSelector({
           <div className="flex flex-col">
             <span className="font-semibold">{workspace.name}</span>
             <span className="text-sm text-muted-foreground">
-              {workspace.plan}
+              {workspace.plan &&
+                `${capitalizeFirstLetter(workspace.plan)} Plan •  ${workspace.members} member${workspace.members > 1 ? "s" : ""}`}
             </span>
           </div>
         </div>

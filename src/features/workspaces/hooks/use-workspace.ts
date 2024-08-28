@@ -2,16 +2,19 @@ import { useWorkspaceQuery } from "../api/query";
 
 export const useWorkspace = () => {
   const { useGetWorkspaces } = useWorkspaceQuery();
-  const getWorkspaces = () => {
-    const { error, isError, isPending, isSuccess, workspaces } =
-      useGetWorkspaces();
+  const {
+    error: getWorkspacesError,
+    isError: isGetWorkspacesError,
+    isPending: isGetWorkspacesPending,
+    workspaces,
+  } = useGetWorkspaces();
 
+  const getWorkspaces = () => {
     return {
       workspaces,
-      isPending,
-      isError,
-      isSuccess,
-      error,
+      isPending: isGetWorkspacesPending,
+      isError: isGetWorkspacesError,
+      error: getWorkspacesError,
     };
   };
 

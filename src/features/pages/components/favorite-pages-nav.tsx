@@ -10,30 +10,29 @@ import { toast } from "sonner";
 const FavoritePageNav = () => {
   const pathname = usePathname();
   const { useFavoritePagesByWorkspaceId } = usePage();
-  const {
-    pages: favoritePages,
-    isPending,
-    isError,
-    error,
-  } = useFavoritePagesByWorkspaceId();
-
-  let workspaceId = pathname.split("/")[2] as Id<"workspaces">;
 
   const { workspaceId: storedWorkspaceId } = useWorkspaceStore(
     (state) => state,
   );
 
-  if (!workspaceId) {
-    workspaceId = storedWorkspaceId as Id<"workspaces">;
-  }
+  // Extract workspaceId from pathname or use the stored one
+  const workspaceId = (pathname.split("/")[2] ||
+    storedWorkspaceId) as Id<"workspaces">;
 
-  if (favoritePages?.length === 0 || !favoritePages) {
-    return null;
-  }
+  const {
+    pages: favoritePages,
+    isPending,
+    isError,
+    error,
+  } = useFavoritePagesByWorkspaceId(workspaceId);
 
   if (isError) {
     toast.error("Failed to fetch your private pages");
     console.error(error);
+  }
+
+  if (!favoritePages?.length) {
+    return null;
   }
 
   return (
@@ -49,6 +48,7 @@ const FavoritePageNav = () => {
           data={favoritePages}
           title="Favorites"
           isFavoriteSection
+          workspaceId={workspaceId}
         />
       )}
     </>

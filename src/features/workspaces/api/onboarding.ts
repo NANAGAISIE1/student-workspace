@@ -1,8 +1,5 @@
-import { useConvexMutation } from "@convex-dev/react-query";
 import { api } from "@convex/api";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from "convex/react";
 
 export const useOnboardingMutation = () =>
-  useMutation({
-    mutationFn: useConvexMutation(api.shared.mutation.onboarding),
-  });
+  useMutation(api.shared.mutation.onboarding);

@@ -28,13 +28,7 @@ export const usePage = () => {
     useDeletePagePermanentlyById,
   } = usePageMutations();
 
-  const {
-    mutate: createPageMutaion,
-    data: pageId,
-    isPending: createPageIsPending,
-    isError: createPageIsError,
-    error: createPageError,
-  } = useCreatePage();
+  const createPageMutation = useCreatePage();
 
   const {
     mutate: deletePagePermanently,
@@ -99,25 +93,15 @@ export const usePage = () => {
       toast.error("No workspace found");
       return;
     }
-    createPageMutaion({
+    const pageId = await createPageMutation({
       type: "page",
       workspaceId: workspaceIdToUse,
       parentId: parentId,
     });
 
-    if (createPageIsPending) {
-      toast.loading("Creating page...", { id: toastId });
-    }
-
-    if (createPageIsError) {
-      toast.error("Failed to create page", { id: toastId });
-      console.log(createPageError);
-    }
-
     if (pageId) {
       toast.success("Page created", { id: toastId });
       router.push(`/app/${workspaceIdToUse}/${pageId}`);
-      return pageId;
     }
   };
 

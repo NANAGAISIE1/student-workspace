@@ -26,7 +26,7 @@ const HomePageCarousel = ({ workspaceId }: Props) => {
   const sortedPages = pages?.sort((a, b) => b.updatedAt - a.updatedAt);
 
   return (
-    <Carousel className="w-full">
+    <Carousel className="w-full max-w-4xl">
       <CarouselContent className="-ml-1">
         {sortedPages?.map((page) => {
           const updatedAt = formatRelative(page.updatedAt, new Date());

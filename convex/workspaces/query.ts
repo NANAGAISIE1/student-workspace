@@ -21,9 +21,7 @@ export const getWorkspaceById = query({
       return null;
     }
 
-    const workspace = await ctx.db.get(member.workspaceId);
-
-    return workspace;
+    return workspaceId;
   },
 });
 
@@ -45,8 +43,16 @@ export const getWorkspaces = query({
 
     for (const workspaceId of workspaceIds) {
       const workspace = await ctx.db.get(workspaceId);
+      const membersInWorkspace = await ctx.db
+        .query("workspaceMembers")
+        .withIndex("by_workspace_id", (q) => q.eq("workspaceId", workspaceId))
+        .collect();
       if (workspace && workspace.archived === false) {
-        workspaces.push(workspace);
+        const workspaceWithMembers = {
+          ...workspace,
+          members: membersInWorkspace.length,
+        };
+        workspaces.push(workspaceWithMembers);
       }
     }
 
@@ -73,5 +79,22 @@ export const getMostCurrentWordspace = query({
     const workspace = await ctx.db.get(member.workspaceId);
 
     return workspace;
+  },
+});
+
+export const getWorkspaceMembers = query({
+  args: { workspaceId: v.id("workspaces") },
+  handler: async (ctx, { workspaceId }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const members = await ctx.db
+      .query("workspaceMembers")
+      .withIndex("by_workspace_id", (q) => q.eq("workspaceId", workspaceId))
+      .collect();
+
+    return members;
   },
 });

@@ -6,14 +6,14 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRightIcon } from "lucide-react";
 import { PageItem } from "./page-item";
-import { usePage } from "../hooks/use-page";
+import { Id } from "../../../../convex/_generated/dataModel";
 
 const PageNavigation: React.FC<{
   data: Doc<"pages">[];
   title: string;
+  workspaceId: Id<"workspaces">;
   isFavoriteSection?: boolean;
-}> = ({ data, title, isFavoriteSection }) => {
-  const { storedWorkspaceId: workspaceId } = usePage();
+}> = ({ data, title, isFavoriteSection, workspaceId }) => {
   const [open, setOpen] = useState<boolean>(() => {
     // Try to get the initial state from localStorage
     if (typeof window !== "undefined") {
