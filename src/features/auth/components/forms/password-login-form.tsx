@@ -16,9 +16,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { loginFormSchema, LoginFormValues } from "../../types/form-types";
+import { useRouter } from "next/navigation";
 
 export function PasswordLoginForm() {
   const { signIn } = useAuthActions();
+  const router = useRouter();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -35,10 +37,11 @@ export function PasswordLoginForm() {
 
   const onSubmit = async (values: LoginFormValues) => {
     try {
-      await signIn("password", values);
+      const { signingIn } = await signIn("password", values);
+      if (signingIn) return router.push("/app");
     } catch (error) {
       console.error(error);
-      toast.error("Could not sign up, please try again.");
+      toast.error("Could not sign in, please try again.");
     }
   };
 

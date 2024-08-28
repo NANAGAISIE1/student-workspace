@@ -13,7 +13,7 @@ function LoginPage() {
             variant: "link",
             className: "!m-0 !p-0",
           })}
-          href={"/login"}
+          href={"/register"}
         >
           Create account
         </Link>

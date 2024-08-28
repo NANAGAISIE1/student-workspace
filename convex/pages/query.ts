@@ -107,6 +107,10 @@ export const getSharedPagesByWorkspaceId = query({
       }
     }
 
+    if (pages.length === 0) {
+      return null;
+    }
+
     return pages;
   },
 });
@@ -236,5 +240,78 @@ export const getPagesByParentPage = query({
       .collect();
 
     return pages;
+  },
+});
+
+export const searchPagesInWorkspace = query({
+  args: {
+    workspaceId: v.id("workspaces"),
+    query: v.string(),
+  },
+  handler: async (ctx, { workspaceId, query }) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (userId === null) {
+      return null;
+    }
+
+    const member = await isMember(ctx, workspaceId);
+
+    if (!member) {
+      return;
+    }
+
+    const allPages = await ctx.db
+      .query("pages")
+      .filter((q) =>
+        q.and(
+          q.eq(q.field("workspaceId"), workspaceId),
+          q.eq(q.field("archived"), false),
+        ),
+      )
+      .order("desc")
+      .collect();
+
+    // // Perform searches on title, content, and emoji separately
+    // const searchResultsTitle = await ctx.db
+    //   .query("pages")
+    //   .withSearchIndex("search_title", (q) => q.search("title", query))
+    //   .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+    //   .collect();
+
+    // const searchResultsContent = await ctx.db
+    //   .query("pages")
+    //   .withSearchIndex("search_content", (q) => q.search("content", query))
+    //   .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+    //   .collect();
+
+    // const searchResultsEmoji = await ctx.db
+    //   .query("pages")
+    //   .withSearchIndex("search_emoji", (q) => q.search("emoji", query))
+    //   .filter((q) => q.eq(q.field("workspaceId"), workspaceId))
+    //   .collect();
+
+    // // Combine and deduplicate results
+    // const combinedResults = [
+    //   ...emptyQueryPages,
+    //   ...searchResultsTitle,
+    //   ...searchResultsContent,
+    //   ...searchResultsEmoji,
+    // ];
+
+    // const uniqueResults = Array.from(
+    //   new Map(combinedResults.map((item) => [item._id, item])).values(),
+    // );
+
+    // // Sort results (you may want to implement a relevance scoring system here)
+    // const sortedResults = uniqueResults.sort(
+    //   (a, b) => b._creationTime - a._creationTime,
+    // );
+
+    // console.log("searching in content", workspaceId, searchResultsContent);
+
+    // // Return top 10 results
+    // return sortedResults.slice(0, 10);
+    return allPages;
   },
 });

@@ -30,26 +30,26 @@ const PrivatePagesNav = () => {
     console.error(error);
   }
 
-  if (!privatePages?.length) {
+  if (isPending || privatePages === undefined) {
+    return (
+      <ul className="m-0 list-none">
+        <li className="flex w-full items-center py-1">
+          <Skeleton className="h-9 w-full" />
+        </li>
+      </ul>
+    );
+  }
+
+  if (!privatePages) {
     return null;
   }
 
   return (
-    <>
-      {isPending ? (
-        <ul className="m-0 list-none">
-          <li className="flex w-full items-center py-1">
-            <Skeleton className="h-9 w-full" />
-          </li>
-        </ul>
-      ) : (
-        <PageNavigation
-          data={privatePages}
-          title="Private"
-          workspaceId={workspaceId}
-        />
-      )}
-    </>
+    <PageNavigation
+      data={privatePages}
+      title="Private"
+      workspaceId={workspaceId}
+    />
   );
 };
 

@@ -90,7 +90,6 @@ export const PageItem: React.FC<PageItemProps> = ({
           {!isFavoriteSection && (
             <Hints
               message="Add a page inside"
-              asChild
               className="text-xs"
               side="bottom"
               align="center"

@@ -30,28 +30,28 @@ const SharedPagesNav = () => {
     console.error(error);
   }
 
-  if (!sharedPages?.length) {
+  if (isPending || sharedPages === undefined) {
+    return (
+      <ul className="m-0 list-none">
+        <li className="flex w-full items-center py-1">
+          <Skeleton className="h-9 w-full" />
+        </li>
+      </ul>
+    );
+  }
+
+  if (!sharedPages) {
     return null;
   }
 
+  console.log(sharedPages);
+
   return (
-    <>
-      {isPending ? (
-        <ul className="m-0 list-none">
-          <li className="flex w-full items-center py-1">
-            <Skeleton className="h-9 w-full" />
-          </li>
-        </ul>
-      ) : (
-        sharedPages && (
-          <PageNavigation
-            data={sharedPages}
-            title="Favorites"
-            workspaceId={workspaceId}
-          />
-        )
-      )}
-    </>
+    <PageNavigation
+      data={sharedPages}
+      title="Shared"
+      workspaceId={workspaceId}
+    />
   );
 };
 

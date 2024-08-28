@@ -2,7 +2,7 @@ import Hints from "@/components/hints";
 import { Button } from "@/components/ui/button";
 import { CommandItem } from "@/components/ui/command";
 import { Doc } from "@convex/dataModel";
-import { TrashIcon, Undo2Icon } from "lucide-react";
+import { FileIcon, TrashIcon, Undo2Icon } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { usePage } from "../../hooks/use-page";
@@ -29,9 +29,24 @@ const TrashList = ({ page, workspaceId }: Props) => {
   };
 
   return (
-    <CommandItem className="group py-1">
-      <Link href={`/app/${workspaceId}/${page._id}`} className="flex flex-1">
-        {page.title}
+    <CommandItem className="group py-1" value={`${page.title}-${page._id}`}>
+      <Link
+        href={`/app/${workspaceId}/${page._id}`}
+        className="flex flex-1 flex-col"
+      >
+        <span className="flex space-x-2">
+          {page.emoji ? (
+            <span>{page.emoji}</span>
+          ) : (
+            <FileIcon className="h-4 w-4" />
+          )}
+          <span>{page.title}</span>
+        </span>
+        {page.content && (
+          <span className="truncate text-xs text-muted-foreground">
+            {page.content.slice(0, 50)}...
+          </span>
+        )}
       </Link>
       <div className="flex space-x-1 opacity-0 group-hover:opacity-100">
         <Hints message="Restore" side="top">

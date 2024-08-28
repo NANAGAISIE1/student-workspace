@@ -154,6 +154,31 @@ export const usePageQueries = () => {
     };
   };
 
+  const useWorkspaceSearch = (
+    query: string,
+    workspaceId?: Id<"workspaces">,
+  ) => {
+    const { workspaceId: storedWorkspaceID } = useWorkspaceStore();
+    const workspaceIdToUse = workspaceId
+      ? workspaceId
+      : (storedWorkspaceID as Id<"workspaces">);
+
+    const { data, error, isError, isPending } = useQueryWithStatus(
+      api.pages.query.searchPagesInWorkspace,
+      {
+        workspaceId: workspaceIdToUse,
+        query,
+      },
+    );
+
+    return {
+      searchResults: data,
+      error,
+      isError,
+      isPending,
+    };
+  };
+
   return {
     useGetPageById,
     useGetPagesByWorkspaceId,
@@ -162,5 +187,6 @@ export const usePageQueries = () => {
     useGetPrivatePagesByWorkspaceId,
     useGetFavoritePagesByWorkspaceId,
     useGetArchivedPagesByWorkspaceId,
+    useWorkspaceSearch,
   };
 };

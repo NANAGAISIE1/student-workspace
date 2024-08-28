@@ -18,7 +18,7 @@ const Hints = ({ ...props }: Props) => {
       <Tooltip>
         <TooltipTrigger asChild>{props.children}</TooltipTrigger>
         <TooltipContent {...props}>
-          <p>{props.message}</p>
+          <span>{props.message}</span>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
