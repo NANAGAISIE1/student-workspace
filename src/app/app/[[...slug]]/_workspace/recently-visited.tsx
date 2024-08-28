@@ -10,7 +10,7 @@ type Props = {
 };
 
 const RecentlyVisited = ({ workspaceId }: Props) => {
-  const { data: pages, isPending } = useQueryWithStatus(
+  const { data: pages } = useQueryWithStatus(
     api.pages.query.getPagesByWorkspaceId,
     { workspaceId },
   );

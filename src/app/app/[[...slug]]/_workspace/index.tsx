@@ -1,13 +1,12 @@
 "use client";
 import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
-import { Check } from "lucide-react";
+import { Check, Loader2Icon } from "lucide-react";
 import { Timeline } from "./calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkspaceStore } from "./current-workspace-store";
 import { useQueryWithStatus } from "@/services/convex-query";
 import { useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { AnimatePresence, motion } from "framer-motion";
 import FeaturedTemplates from "./featured-templates";
 import RecentlyVisited from "./recently-visited";
@@ -46,36 +45,35 @@ const Workspace = ({ id }: Props) => {
     }
   }, [fetchedWorkspaceId, storedId, setCurrentWorkspaceId]);
 
+  if (!workspaceId || !user) {
+    return (
+      <div className="absolute inset-0 flex h-full flex-col items-center justify-center">
+        <Loader2Icon className="size-8 animate-spin" />
+        <p>Loading workspace</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-full flex-col items-center space-y-12 pb-32 pt-12">
       <div className="flex items-center justify-center">
         <h2>{`${greeting}, ${user ? user.name : ""}`}</h2>
       </div>
       <div className="w-[65%] items-center">
-        {isPending ? (
-          <div className="flex gap-3 sm:basis-1/2 md:basis-3 lg:basis-1/4">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="size-52 w-full">
-                <Skeleton className="h-full w-full" />
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <AnimatePresence>
-            {workspaceId && (
-              <motion.div
-                key="recentlyVisited"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-3"
-              >
-                <RecentlyVisited workspaceId={workspaceId} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        )}
+        <AnimatePresence>
+          {
+            <motion.div
+              key="recentlyVisited"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-3"
+            >
+              <RecentlyVisited workspaceId={workspaceId} />
+            </motion.div>
+          }
+        </AnimatePresence>
       </div>
 
       <div className="w-[65%] items-center space-y-3">
