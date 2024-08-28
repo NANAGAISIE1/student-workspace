@@ -52,8 +52,8 @@ export function VerificationForm({ email }: VerificationFormProps) {
 
   const onSubmit = async (values: VerifyPasswordFormValues) => {
     try {
-      await signIn("password", values);
-      router.push("/onboarding");
+      const { signingIn } = await signIn("password", values);
+      if (signingIn) return router.push("/onboarding");
       form.reset();
     } catch (error) {
       console.error(error);
