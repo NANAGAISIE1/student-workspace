@@ -21,7 +21,7 @@ const Workspace = ({ id }: Props) => {
     (state) => state,
   );
   const { data: fetchedWorkspace, isPending } = useQueryWithStatus(
-    api.workspaces.query.getMostCurrentWordspace,
+    api.workspaces.query.getMostCurrentWorkspace,
     {},
   );
 

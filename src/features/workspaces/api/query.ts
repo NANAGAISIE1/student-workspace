@@ -38,7 +38,7 @@ export const useWorkspaceQuery = () => {
 
   const useGetMostCurrentWorkspace = () => {
     const { data, isError, isPending, isSuccess, error } = useQueryWithStatus(
-      api.workspaces.query.getMostCurrentWordspace,
+      api.workspaces.query.getMostCurrentWorkspace,
     );
     return {
       workspace: data,
