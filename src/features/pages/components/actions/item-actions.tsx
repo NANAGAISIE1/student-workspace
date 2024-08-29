@@ -54,6 +54,18 @@ export const PageItemActions: React.FC<{
         label: "Undo",
         onClick: async () => await archivePage(nodeId),
       },
+      // (
+      //   <Button
+      //     onClick={async () => {
+      //       await archivePage(nodeId);
+      //       toast.dismiss();
+      //     }}
+      //     size={"sm"}
+      //     className="absolute right-2 p-1"
+      //   >
+      //     Undo
+      //   </Button>
+      // ),
     });
     if (pathname === `/app/${workspaceId}/${nodeId}`) {
       router.push(`/app/${workspaceId}`);
