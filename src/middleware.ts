@@ -35,14 +35,18 @@ export default convexAuthNextjsMiddleware(async (request) => {
       return nextjsMiddlewareRedirect(request, "/login");
     }
 
-    const workspace = await fetchQuery(
-      api.workspaces.query.getMostCurrentWorkspace,
-      {},
-      { token: convexAuthNextjsToken() },
-    );
-
-    if (workspaceRoute(request) && workspace === null) {
-      return nextjsMiddlewareRedirect(request, "/onboarding");
+    try {
+      const workspace = await fetchQuery(
+        api.workspaces.query.getMostCurrentWorkspace,
+        {},
+        { token: convexAuthNextjsToken() },
+      );
+      if (workspaceRoute(request) && workspace === null) {
+        return nextjsMiddlewareRedirect(request, "/onboarding");
+      }
+    } catch (error) {
+      console.error("Error fetching workspace", error);
+      return nextjsMiddlewareRedirect(request, "/login");
     }
   }
 
