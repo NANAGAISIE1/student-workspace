@@ -62,7 +62,7 @@ const SearchCommandModal: React.FC<Props> = () => {
             {filteredResults.map((result) => (
               <CommandItem
                 key={result._id}
-                value={result.title}
+                value={`${result.title}-${result._id}`}
                 onSelect={() => {
                   router.push(`/app/${workspaceId}/${result._id}`);
                   closeModal("search-dialog");
