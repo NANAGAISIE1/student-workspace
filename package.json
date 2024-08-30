@@ -96,7 +96,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.52.2",
+    "react-hook-form": "^7.53.0",
     "react-lite-youtube-embed": "^2.4.0",
     "react-tweet": "^3.2.1",
     "resend": "^4.0.0",

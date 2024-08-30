@@ -4,17 +4,17 @@
 
 @font-face {
   font-family: "Inter";
-  src: url("../font/Inter.ttf") format("truetype");
+  src: url("./font/Inter.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "Geist";
-  src: url("../font/GeistVF.woff2") format("woff2");
+  src: url("./font/GeistVF.woff2") format("woff2");
 }
 
 @font-face {
   font-family: "Geist Mono";
-  src: url("../font/GeistMonoVF.woff2") format("woff2");
+  src: url("./font/GeistMonoVF.woff2") format("woff2");
 }
 
 @layer base {
@@ -152,7 +152,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background-dark text-foreground font-body;
+    @apply bg-background-dark font-body text-foreground;
   }
   h1,
   h2,
@@ -179,6 +179,6 @@
     @apply mt-6 border-l-2 pl-6 italic;
   }
   code {
-    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold font-mono;
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
   }
 }

@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { PasswordRegistrationCard } from "@/features/auth/components/register";
+import { RegisterCard } from "@/ui/components/auth/register/RegisterCard";
 
 function RegisterPage() {
   return (
     <main className="flex h-full flex-col items-center justify-center">
-      <PasswordRegistrationCard />
+      <RegisterCard />
       <div className="flex items-center justify-center">
         <p className="mr-2">Have an account?</p>
         <Link
