@@ -1,9 +1,8 @@
-import { Site } from "@/core/domain/entities/site";
-import { Id } from "@convex/dataModel";
+import { Doc, Id } from "@convex/dataModel";
 
 export interface SiteRepository {
-  getSiteByPageId(pageId: Id<"pages">): Promise<Site | null>;
-  getSitesByCreatorId(creatorId: Id<"users">): Promise<Site[]>;
-  createSite(site: Omit<Site, "id">): Promise<Site>;
+  getSiteByPageId(pageId: Id<"pages">): Promise<Doc<"sites"> | null>;
+  getSitesByCreatorId(creatorId: Id<"users">): Promise<Doc<"sites">[]>;
+  createSite(site: Omit<Doc<"sites">, "_id">): Promise<Doc<"sites">>;
   deleteSite(id: Id<"sites">): Promise<void>;
 }

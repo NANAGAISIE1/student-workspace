@@ -1,10 +1,8 @@
-import { User } from "@/core/domain/entities/user";
-import { Id } from "@convex/dataModel";
+import { Doc, Id } from "@convex/dataModel";
 
 export interface UserRepository {
-  getCurrentUser(): Promise<User | null>;
-  getUserById(id: Id<"users">): Promise<User | null>;
-  createUser(user: Omit<User, "id">): Promise<User>;
-  updateUser(user: User): Promise<User>;
+  getCurrentUser(): Promise<Doc<"users"> | null>;
+  getUserById(id: Id<"users">): Promise<Doc<"users"> | null>;
+  updateUser(user: Doc<"users">): Promise<Id<"users">>;
   deleteUser(id: Id<"users">): Promise<void>;
 }
