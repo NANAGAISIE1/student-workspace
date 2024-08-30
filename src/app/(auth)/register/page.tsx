@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
-import { RegisterCard } from "@/ui/components/auth/register/RegisterCard";
+import { RegisterCard } from "@/ui/components/auth/register/registeration-card";
 
 function RegisterPage() {
   return (

@@ -1,5 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
-import { SignInCard } from "@/ui/components/auth/login/LoginCard";
+import { SignInCard } from "@/ui/components/auth/login/login-card";
 import Link from "next/link";
 
 function LoginPage() {

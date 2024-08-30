@@ -1,4 +1,4 @@
-import { VerificationCard } from "@/ui/components/auth/email-verification/VerificationCard";
+import { VerificationCard } from "@/ui/components/auth/email-verification/email-verification-card";
 
 function RegisterPage() {
   return (
