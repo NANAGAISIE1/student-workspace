@@ -1,7 +1,7 @@
 import { Id } from "@convex/dataModel";
 import Workspace from "./_workspace";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import Page from "./_document";
+import Page from "./_page";
 
 type Props = {};
 
