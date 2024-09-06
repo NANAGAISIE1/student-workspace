@@ -42,3 +42,5 @@ export const gettingStartedTemplate: Template = {
   content: `Welcome to Convex! Here are some tips to get you started:
   This is an example document for getting started. You can use this document to create your own getting started guide.`,
 };
+
+// const gettingStartedContent =

@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { cn } from "@/lib/utils";
 import { Doc } from "@convex/dataModel";
 import { useState, useEffect } from "react";

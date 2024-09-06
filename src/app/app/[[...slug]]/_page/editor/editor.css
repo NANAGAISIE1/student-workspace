@@ -1,0 +1,213 @@
+/* Light theme */
+.bn-shadcn {
+  --background: var(--background-dark);
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 0 0% 9%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 96%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 0 0% 3%;
+  --radius: 0.1875rem;
+  --chart-1: 203 82% 76%;
+  --chart-2: 172 66% 50%;
+  --chart-3: 0 69% 50%;
+  --chart-4: 47 80% 52%;
+  --chart-5: 269 56% 62%;
+  --radius: 0.5rem;
+
+  --font-body: "Inter", sans-serif;
+  --font-geist: "Geist", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+}
+
+/* Dark theme */
+.bn-shadcn.dark {
+  --background: var(--background-dark);
+  --foreground: 0 0% 100%;
+  --card: var(--background-dark);
+  --card-foreground: 0 0% 100%;
+  --popover: var(--background-dark);
+  --popover-foreground: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 9%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 63%;
+  --accent: 0 0% 15%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 0 0% 83%;
+  --chart-1: 203 82% 76%;
+  --chart-2: 172 66% 50%;
+  --chart-3: 0 69% 50%;
+  --chart-4: 47 80% 52%;
+  --chart-5: 269 56% 62%;
+}
+
+.alert {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  border-radius: 4px;
+  min-height: 48px;
+  padding: 4px;
+}
+
+.alert[data-alert-type="warning"] {
+  background-color: #fff6e6;
+}
+
+.alert[data-alert-type="error"] {
+  background-color: #ffe6e6;
+}
+
+.alert[data-alert-type="info"] {
+  background-color: #e6ebff;
+}
+
+.alert[data-alert-type="success"] {
+  background-color: #e6ffe6;
+}
+
+[data-color-scheme="dark"] .alert[data-alert-type="warning"] {
+  background-color: #805d20;
+}
+
+[data-color-scheme="dark"] .alert[data-alert-type="error"] {
+  background-color: #802020;
+}
+
+[data-color-scheme="dark"] .alert[data-alert-type="info"] {
+  background-color: #203380;
+}
+
+[data-color-scheme="dark"] .alert[data-alert-type="success"] {
+  background-color: #208020;
+}
+
+.alert-icon-wrapper {
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 12px;
+  margin-right: 12px;
+  height: 18px;
+  width: 18px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.alert-icon[data-alert-icon-type="warning"] {
+  color: #e69819;
+}
+
+.alert-icon[data-alert-icon-type="error"] {
+  color: #d80d0d;
+}
+
+.alert-icon[data-alert-icon-type="info"] {
+  color: #507aff;
+}
+
+.alert-icon[data-alert-icon-type="success"] {
+  color: #0bc10b;
+}
+
+.inline-content {
+  flex-grow: 1;
+}
+
+/* Base container styles
+.bn-container[data-theming-css-student-workspace] {
+  --bn-font-family: "Inter", sans-serif;
+  --bn-border-radius: var(--radius);
+}
+
+/* Light theme editor styles */
+/* .bn-container {
+  --bn-colors-editor-text: hsl(var(--foreground));
+  --bn-colors-editor-background: hsl(var(--background));
+  --bn-colors-menu-text: hsl(var(--foreground));
+  --bn-colors-menu-background: hsl(var(--background));
+  --bn-colors-tooltip-text: hsl(var(--popover-foreground));
+  --bn-colors-tooltip-background: hsl(var(--popover));
+  --bn-colors-hovered-text: hsl(var(--accent-foreground));
+  --bn-colors-hovered-background: hsl(var(--accent));
+  --bn-colors-selected-text: hsl(var(--secondary-foreground));
+  --bn-colors-selected-background: hsl(var(--secondary));
+  --bn-colors-disabled-text: hsl(var(--muted-foreground));
+  --bn-colors-disabled-background: hsl(var(--muted));
+  --bn-colors-shadow: hsl(var(--border));
+  --bn-colors-border: hsl(var(--border));
+  --bn-colors-side-menu: hsl(var(--card-foreground));
+} */
+
+/* Dark theme editor styles */
+/* .bn-container[data-color-scheme="dark"] {
+  --bn-colors-editor-text: hsl(var(--foreground));
+  --bn-colors-editor-background: hsl(var(--background-dark));
+  --bn-colors-menu-text: hsl(var(--foreground));
+  --bn-colors-menu-background: hsl(var(--background-dark));
+  --bn-colors-tooltip-text: hsl(var(--popover-foreground));
+  --bn-colors-tooltip-background: hsl(var(--popover));
+  --bn-colors-hovered-text: hsl(var(--accent-foreground));
+  --bn-colors-hovered-background: hsl(var(--accent));
+  --bn-colors-selected-text: hsl(var(--secondary-foreground));
+  --bn-colors-selected-background: hsl(var(--secondary));
+  --bn-colors-disabled-text: hsl(var(--muted-foreground));
+  --bn-colors-disabled-background: hsl(var(--muted));
+  --bn-colors-shadow: hsl(var(--border));
+  --bn-colors-border: hsl(var(--border));
+  --bn-colors-side-menu: hsl(var(--card-foreground));
+} */
+
+/* Highlight colors - you may want to adjust these to match your theme */
+/* .bn-container,
+.bn-container[data-color-scheme="dark"] {
+  --bn-colors-highlights-gray-text: var(--pastel-blue);
+  --bn-colors-highlights-gray-background: var(--background-dark);
+  --bn-colors-highlights-brown-text: var(--pastel-orange);
+  --bn-colors-highlights-brown-background: var(--background-dark);
+  --bn-colors-highlights-red-text: var(--vibrant-red);
+  --bn-colors-highlights-red-background: var(--background-dark);
+  --bn-colors-highlights-orange-text: var(--vibrant-orange);
+  --bn-colors-highlights-orange-background: var(--background-dark);
+  --bn-colors-highlights-yellow-text: var(--vibrant-yellow);
+  --bn-colors-highlights-yellow-background: var(--background-dark);
+  --bn-colors-highlights-green-text: var(--vibrant-green);
+  --bn-colors-highlights-green-background: var(--background-dark);
+  --bn-colors-highlights-blue-text: var(--vibrant-blue);
+  --bn-colors-highlights-blue-background: var(--background-dark);
+  --bn-colors-highlights-purple-text: var(--vibrant-purple);
+  --bn-colors-highlights-purple-background: var(--background-dark);
+  --bn-colors-highlights-pink-text: var(--vibrant-pink);
+  --bn-colors-highlights-pink-background: var(--background-dark);
+} */
+
+/* Additional styles */
+/* .bn-container {
+  --bn-shadow-medium: 0 4px 12px hsl(var(--border));
+  --bn-shadow-light: 0 2px 6px hsl(var(--border));
+  --bn-border: 1px solid hsl(var(--border));
+  --bn-border-radius-small: max(calc(var(--radius) - 2px), 1px);
+  --bn-border-radius-medium: var(--radius);
+  --bn-border-radius-large: max(calc(var(--radius) + 2px), 1px);
+}  */

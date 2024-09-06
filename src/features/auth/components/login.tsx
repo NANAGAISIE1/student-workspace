@@ -1,4 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/shadcn-ui/card";
 import { SignInMethodDivider } from "./ui/sign-in-divider";
 import { PasswordLoginForm } from "./forms/password-login-form";
 import { SignInWithGitHub } from "./auth-providers/github";

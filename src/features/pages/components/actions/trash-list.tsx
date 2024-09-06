@@ -1,6 +1,6 @@
 import Hints from "@/components/hints";
-import { Button } from "@/components/ui/button";
-import { CommandItem } from "@/components/ui/command";
+import { Button } from "@/components/shadcn-ui/button";
+import { CommandItem } from "@/components/shadcn-ui/command";
 import { Doc } from "@convex/dataModel";
 import { FileIcon, TrashIcon, Undo2Icon } from "lucide-react";
 import Link from "next/link";

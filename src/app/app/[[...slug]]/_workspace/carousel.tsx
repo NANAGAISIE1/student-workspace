@@ -1,18 +1,18 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/shadcn-ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/components/shadcn-ui/carousel";
 import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
 import Link from "next/link";
 import { useQueryWithStatus } from "@/services/convex-query";
 import { formatRelative } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/shadcn-ui/skeleton";
 
 type Props = {
   workspaceId: Id<"workspaces">;

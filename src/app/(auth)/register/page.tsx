@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/shadcn-ui/button";
 import { PasswordRegistrationCard } from "@/features/auth/components/register";
 
 function RegisterPage() {

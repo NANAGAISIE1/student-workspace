@@ -4,7 +4,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
+} from "./shadcn-ui/tooltip";
 import { TooltipContentProps } from "@radix-ui/react-tooltip";
 
 interface Props extends TooltipContentProps {

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/shadcn-ui/sonner";
 import { Loader2 } from "lucide-react";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
 
