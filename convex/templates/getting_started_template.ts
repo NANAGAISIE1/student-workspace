@@ -1,20 +1,4 @@
-import { MyPartialBlock } from "../../src/app/app/[[...slug]]/_page/editor/index";
-export type Template = {
-  title: string;
-  type: "notes" | "research" | "site" | "gettingStarted";
-  emoji: string;
-  pageType: "page" | "todo" | "calendar";
-  content: string;
-};
-
-// type Templates = {
-//   notes: Template;
-//   research: Template;
-//   site: Template;
-//   gettingStartedTemplate: Template;
-// };
-
-type Content = MyPartialBlock[];
+import { Content, Template } from "./type";
 
 const gettingStartedTemplateContent: Content = [
   {
@@ -124,35 +108,10 @@ const gettingStartedTemplateContent: Content = [
   },
 ];
 
-export const pageTemplates: Template[] = [
-  {
-    title: "Class Notes",
-    type: "notes",
-    pageType: "page",
-    emoji: "📝",
-    content: JSON.stringify(gettingStartedTemplateContent),
-  },
-  {
-    title: "Research Paper",
-    type: "research",
-    pageType: "page",
-
-    emoji: "🔍",
-    content: JSON.stringify(gettingStartedTemplateContent),
-  },
-  {
-    title: "Online Resume",
-    type: "site",
-    pageType: "page",
-
-    emoji: "💼",
-    content: JSON.stringify(gettingStartedTemplateContent),
-  },
-  {
-    title: "Getting Started",
-    type: "gettingStarted",
-    pageType: "page",
-    emoji: "🚀",
-    content: JSON.stringify(gettingStartedTemplateContent),
-  },
-];
+export const gettingStartedTemplate: Template = {
+  title: "Getting Started",
+  type: "gettingStarted",
+  pageType: "page",
+  emoji: "🚀",
+  content: JSON.stringify(gettingStartedTemplateContent),
+};
