@@ -1,7 +1,7 @@
 "use client";
 
 import EmojiPicker from "emoji-picker-react";
-import { EmojiStyle } from "emoji-picker-react";
+import { EmojiStyle, Theme } from "emoji-picker-react";
 import React, { useState } from "react";
 
 function EmojiPickerComponent({
@@ -19,6 +19,7 @@ function EmojiPickerComponent({
         <div className="absolute z-10">
           <EmojiPicker
             emojiStyle={EmojiStyle.NATIVE}
+            theme={Theme.AUTO}
             onEmojiClick={(e) => {
               setEmojiIcon(e.emoji);
               setOpenEmojiPicker(false);
