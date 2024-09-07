@@ -1,13 +1,13 @@
 "use client";
 
 import { Icons } from "@/components/icons";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/shadcn-ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/shadcn-ui/popover";
+import { Separator } from "@/components/shadcn-ui/separator";
 import { Id } from "@convex/dataModel";
 import {
   ArrowUpRightIcon,

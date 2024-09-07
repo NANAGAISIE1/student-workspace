@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { ArrowRightToLineIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSidebarStore } from "./sidebar/use-sidebar";
@@ -10,7 +10,7 @@ const WorkspaceHeader = (props: Props) => {
   const { isSidebarOpen, toggleSidebar } = useSidebarStore((state) => state);
   return (
     <motion.header
-      className="w-full items-center flex justify-between h-10 flex-1 relative px-2"
+      className="relative flex h-10 w-full flex-1 items-center justify-between px-2"
       initial={false}
       animate={{
         marginLeft: isSidebarOpen ? "18rem" : "0",
@@ -26,7 +26,7 @@ const WorkspaceHeader = (props: Props) => {
       <div className="flex items-center justify-center space-x-1">
         {!isSidebarOpen && (
           <Button size={"icon"} variant={"ghost"} onClick={toggleSidebar}>
-            <ArrowRightToLineIcon className="w-4 h-4" />
+            <ArrowRightToLineIcon className="h-4 w-4" />
           </Button>
         )}
       </div>

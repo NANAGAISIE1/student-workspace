@@ -1,9 +1,13 @@
 import { useWorkspaceStore } from "@/app/app/[[...slug]]/_workspace/current-workspace-store";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/shadcn-ui/avatar";
 import {
   DropdownMenuGroup,
   DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/shadcn-ui/dropdown-menu";
 import { Doc } from "@convex/dataModel";
 import { CheckIcon } from "lucide-react";
 import { useRouter } from "next/navigation";

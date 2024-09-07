@@ -1,10 +1,9 @@
 import { ConvexError, v } from "convex/values";
-import { mutation, MutationCtx } from "../_generated/server";
+import { internalMutation, mutation, MutationCtx } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "../_generated/dataModel";
-import { gettingStartedTemplate, interestsTemplates } from "./constants";
-import { asyncMap } from "modern-async";
 import { createWorkspace } from "../workspaces/mutation";
+import { pageTemplates } from "../templates";
 
 export const onboarding = mutation({
   args: {
@@ -41,7 +40,35 @@ export const onboarding = mutation({
 
     await uploadPages(ctx, workspaceId, interests);
 
-    return workspaceId;
+    const gettingStartedPage = await ctx.db
+      .query("pageTemplates")
+      .filter((q) => q.eq(q.field("type"), "gettingStarted"))
+      .unique();
+
+    if (gettingStartedPage === null) {
+      return null;
+    }
+
+    const gettingStartedPageId = await ctx.db.insert("pages", {
+      title: gettingStartedPage.title,
+      workspaceId,
+      creatorId: userId,
+      content: gettingStartedPage.content,
+      emoji: gettingStartedPage.emoji,
+      updatedAt: Date.now(),
+      type: gettingStartedPage.pageType,
+      archived: false,
+      lastEditedBy: userId,
+    });
+
+    if (gettingStartedPageId === undefined) {
+      return null;
+    }
+
+    return {
+      workspaceId,
+      gettingStartedPageId,
+    };
   },
 });
 
@@ -55,20 +82,61 @@ async function uploadPages(
     return;
   }
 
-  const templates = interests.map((interest) => interestsTemplates[interest]);
-  const combinedTemplates = [...templates, gettingStartedTemplate];
+  const templates = await Promise.all(
+    interests.map(async (interest) => {
+      const template = await ctx.db
+        .query("pageTemplates")
+        .filter((q) => q.eq(q.field("type"), interest))
+        .first();
 
-  return asyncMap(combinedTemplates, async (template) => {
-    await ctx.db.insert("pages", {
-      title: template.title,
-      workspaceId,
-      creatorId: userId,
-      content: template.content,
-      emoji: template.emoji,
-      updatedAt: Date.now(),
-      type: template.type,
-      archived: false,
-      lastEditedBy: userId,
-    });
-  });
+      if (template === null) {
+        return;
+      }
+
+      return template;
+    }),
+  );
+
+  await Promise.all(
+    templates.map(async (template) => {
+      if (template === undefined) {
+        return;
+      }
+
+      const pageId = await ctx.db.insert("pages", {
+        title: template.title,
+        workspaceId,
+        creatorId: userId,
+        content: template.content,
+        emoji: template.emoji,
+        updatedAt: Date.now(),
+        type: template.pageType,
+        archived: false,
+        lastEditedBy: userId,
+      });
+
+      return pageId;
+    }),
+  );
 }
+
+export const uploadPageTemplate = internalMutation({
+  args: {},
+  handler: async (ctx) => {
+    const templates = pageTemplates;
+
+    await Promise.all(
+      templates.map(async (template) => {
+        const pageId = await ctx.db.insert("pageTemplates", {
+          title: template.title,
+          content: template.content,
+          pageType: template.pageType,
+          emoji: template.emoji,
+          type: template.type,
+        });
+
+        return pageId;
+      }),
+    );
+  },
+});

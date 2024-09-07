@@ -1,7 +1,9 @@
 import { Id } from "@convex/dataModel";
 import Workspace from "./_workspace";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import Page from "./_document";
+import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
+import dynamic from "next/dynamic";
+
+const Page = dynamic(() => import("./_page"), { ssr: false });
 
 type Props = {};
 
@@ -13,12 +15,11 @@ const Home = ({
   };
 }) => {
   let workspaceId: string[] | undefined;
-  let documentId: string[] | undefined;
+  let documentId: string | undefined;
 
   if (params?.slug?.length === 2) {
     // @ts-expect-error
     workspaceId = params.slug[0];
-    // @ts-expect-error
     documentId = params.slug[1];
   } else {
     workspaceId = params.slug;
@@ -27,9 +28,9 @@ const Home = ({
 
   if (documentId) {
     return (
-      <ScrollArea className="h-[calc(100dvh-56px)]">
-        <Page id={documentId as Id<"pages">[]} />
-      </ScrollArea>
+      <div className="h-full w-full overflow-hidden">
+        <Page id={documentId as Id<"pages">} />
+      </div>
     );
   }
 

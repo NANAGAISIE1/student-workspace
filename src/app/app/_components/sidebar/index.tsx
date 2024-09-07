@@ -1,7 +1,7 @@
 import { LayoutTemplate } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/shadcn-ui/button";
+import { Separator } from "@/components/shadcn-ui/separator";
+import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
 import SidebarWrapper from "./sidebar-wrapper";
 import SidebarMenu from "./side-bar-menu";
 import Hints from "@/components/hints";

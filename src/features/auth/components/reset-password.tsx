@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { useState } from "react";
 import { SendOtpForm } from "./forms/send-otp-form";
 import {
@@ -9,7 +9,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/shadcn-ui/card";
 import ResetPassWordForm from "./forms/password-reset-form";
 
 export function ResetPasswordWithEmailCode({

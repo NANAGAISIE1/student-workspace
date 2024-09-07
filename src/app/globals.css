@@ -152,7 +152,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background-dark text-foreground font-body;
+    @apply bg-background-dark font-body text-foreground;
   }
   h1,
   h2,
@@ -173,12 +173,12 @@
     @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
   p {
-    @apply leading-7 [&:not(:first-child)]:mt-6;
+    @apply leading-7;
   }
   blockquote {
     @apply mt-6 border-l-2 pl-6 italic;
   }
   code {
-    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] text-sm font-semibold font-mono;
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
   }
 }

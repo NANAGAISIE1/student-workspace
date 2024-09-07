@@ -1,8 +1,8 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/shadcn-ui/button";
+import { Input } from "@/components/shadcn-ui/input";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/components/shadcn-ui/form";
 import { api } from "@convex/api";
 import { useQuery } from "convex/react";
 import {

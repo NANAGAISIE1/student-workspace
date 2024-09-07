@@ -1,6 +1,6 @@
 import Sidebar from "./_components/sidebar";
 import WorkspaceHeader from "./_components/header";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/shadcn-ui/separator";
 import WorkspaceWrapper from "./_components/workspace-wrapper";
 import SearchDialog from "@/features/workspaces/components/search-dialog";
 

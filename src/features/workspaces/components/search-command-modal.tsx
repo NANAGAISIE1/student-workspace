@@ -6,15 +6,15 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/components/shadcn-ui/command";
+import { DialogDescription, DialogTitle } from "@/components/shadcn-ui/dialog";
+import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
 import { usePageQueries } from "@/features/pages/api/query";
 import { CommandLoading } from "cmdk";
 import { FileIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useWorkspaceStore } from "../store/workspace-store";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/shadcn-ui/skeleton";
 import { Doc } from "@convex/dataModel";
 import { useModalStore } from "@/components/global-modal";
 import { useFormattedSearchResults } from "@/hooks/format-string";

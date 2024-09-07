@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { ChevronLeft, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
