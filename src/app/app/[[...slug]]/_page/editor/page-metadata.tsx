@@ -34,7 +34,7 @@ const PageMetadata = ({ pageTitle, pageId, emoji: savedEmoji }: Props) => {
           type="text"
           placeholder="Untitled Document"
           defaultValue={title}
-          className="text-4xl font-bold outline-none"
+          className="bg-background-dark text-4xl font-bold outline-none"
           onBlur={handleTitleChange}
         />
       </div>
