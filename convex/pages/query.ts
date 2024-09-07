@@ -323,3 +323,24 @@ export const searchPagesInWorkspace = query({
     return allPages;
   },
 });
+
+export const getPageBannerImageByPageId = query({
+  args: {
+    pageId: v.id("pages"),
+  },
+  handler: async (ctx, { pageId }) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (userId === null) {
+      return null;
+    }
+
+    const page = await ctx.db.get(pageId);
+
+    if (!page || !page.imageBanner) {
+      return null;
+    }
+
+    return page.imageBanner;
+  },
+});
