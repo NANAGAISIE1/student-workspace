@@ -23,8 +23,8 @@ const Page = async ({ id }: Props) => {
 
   return (
     <ScrollArea className="h-[calc(100dvh-56px)]">
-      <div className="flex h-full w-full flex-col space-y-8">
-        <ImageBanner />
+      <div className="flex h-full w-full flex-col">
+        <ImageBanner preloadedPage={preloadedPage} />
         <div className="relative h-full w-full items-center justify-center">
           <WorkspaceEditor preloadedPage={preloadedPage} />
         </div>

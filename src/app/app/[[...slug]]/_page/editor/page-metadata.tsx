@@ -1,6 +1,4 @@
 "use client";
-
-import { Input } from "@/components/shadcn-ui/input";
 import { useDebounceFull } from "@/hooks/use-debounce";
 import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
@@ -9,13 +7,17 @@ import React from "react";
 
 type Props = {
   pageTitle: string;
+  emoji?: string;
   pageId: Id<"pages">;
 };
 
-const PageMetadata = ({ pageTitle, pageId }: Props) => {
-  const [title, setTitle] = React.useState("Untitled");
+const PageMetadata = ({ pageTitle, pageId, emoji: savedEmoji }: Props) => {
+  const [title, setTitle] = React.useState(pageTitle);
+
   const changeTitle = useMutation(api.pages.mutation.renamePageById);
+
   const debouncedTitleChange = useDebounceFull(changeTitle, 500);
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     debouncedTitleChange({ pageId, title: e.target.value });
   };
@@ -25,13 +27,18 @@ const PageMetadata = ({ pageTitle, pageId }: Props) => {
   }, [pageTitle]);
 
   return (
-    <div className="px-[10rem]">
-      <Input
-        value={title}
-        onChange={handleTitleChange}
-        className="focus-visible:ring-offset scroll-m-20 border-none bg-background-dark text-3xl font-semibold tracking-tight ring-transparent focus:border-none focus-visible:border-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 focus-visible:ring-offset-transparent"
-      />
-    </div>
+    <>
+      {/* File Name  */}
+      <div className="ml-10 mt-10 p-10 px-20">
+        <input
+          type="text"
+          placeholder="Untitled Document"
+          defaultValue={title}
+          className="text-4xl font-bold outline-none"
+          onBlur={handleTitleChange}
+        />
+      </div>
+    </>
   );
 };
 

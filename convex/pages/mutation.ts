@@ -159,3 +159,78 @@ export const renamePageById = mutation({
     return;
   },
 });
+
+export const changeEmojiById = mutation({
+  args: {
+    pageId: v.id("pages"),
+    emoji: v.string(),
+  },
+  handler: async (ctx, { pageId, emoji }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const page = await ctx.db.get(pageId);
+
+    if (!page) {
+      throw new ConvexError({ message: "Page not found", status: 404 });
+    }
+
+    const admin = await isAdmin(ctx, page.workspaceId);
+
+    if (!admin) {
+      throw new ConvexError({
+        message: "You do not have permission to rename this page",
+        status: 401,
+      });
+    }
+
+    await ctx.db.patch(pageId, {
+      emoji,
+      updatedAt: Date.now(),
+      lastEditedBy: userId,
+    });
+
+    return;
+  },
+});
+
+export const changeImageBannerById = mutation({
+  args: {
+    pageId: v.id("pages"),
+    imageBanner: v.optional(v.id("bannerImages")),
+    remove: v.optional(v.boolean()),
+  },
+  handler: async (ctx, { pageId, imageBanner, remove }) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      return null;
+    }
+
+    const page = await ctx.db.get(pageId);
+
+    if (!page) {
+      throw new ConvexError({ message: "Page not found", status: 404 });
+    }
+
+    if (remove && imageBanner === undefined) {
+      await ctx.db.patch(pageId, {
+        imageBanner: undefined,
+        updatedAt: Date.now(),
+        lastEditedBy: userId,
+      });
+      return;
+    }
+
+    if (imageBanner) {
+      await ctx.db.patch(pageId, {
+        imageBanner,
+        updatedAt: Date.now(),
+        lastEditedBy: userId,
+      });
+    }
+
+    return;
+  },
+});
