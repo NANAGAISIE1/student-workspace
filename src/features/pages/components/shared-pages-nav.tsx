@@ -44,8 +44,6 @@ const SharedPagesNav = () => {
     return null;
   }
 
-  console.log(sharedPages);
-
   return (
     <PageNavigation
       data={sharedPages}

@@ -20,6 +20,10 @@ type Props = {
   preloadedPage: Preloaded<typeof api.pages.query.getPageById>;
 };
 
+type MyBlockNoteEditor = typeof schema.BlockNoteEditor;
+export type MyBlock = typeof schema.Block;
+export type MyPartialBlock = typeof schema.PartialBlock;
+
 export const schema = BlockNoteSchema.create({
   blockSpecs: {
     ...defaultBlockSpecs,
@@ -30,9 +34,18 @@ export const schema = BlockNoteSchema.create({
 // Our <Editor> component we can reuse later
 export default function WorkspaceEditor({ preloadedPage }: Props) {
   const page = usePreloadedQuery(preloadedPage);
-  // Creates a new editor instance.
+  const content: MyPartialBlock[] =
+    page && page.content
+      ? JSON.parse(page?.content)
+      : [
+          {
+            type: "paragraph",
+          },
+        ];
+
   const editor = useCreateBlockNote({
     schema,
+    initialContent: content,
   });
 
   if (!editor || !page) {
@@ -48,6 +61,7 @@ export default function WorkspaceEditor({ preloadedPage }: Props) {
         data-theming-css-student-workspace
         slashMenu={false}
         shadCNComponents={{}}
+        className="px-28"
       >
         <SuggestionMenuController
           triggerCharacter={"/"}

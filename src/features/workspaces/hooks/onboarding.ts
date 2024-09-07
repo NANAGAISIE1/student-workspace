@@ -40,20 +40,22 @@ export const useOnboardingForm = (totalSteps: number) => {
   const processForm: SubmitHandler<OnboardingFormInputs> = async (data) => {
     setIsSubmitting(true);
     try {
-      const workspaceId = await onboardingMutation(data);
+      const response = await onboardingMutation(data);
 
-      if (workspaceId === null) {
+      if (response === null) {
         toast.error("Failed to create workspace. Please try again.");
         setStep(0);
         return;
       }
 
+      const { gettingStartedPageId, workspaceId } = response;
+
       setCurrentWorkspaceId(workspaceId);
-      router.push(`/app/${workspaceId}`);
+      router.push(`/app/${workspaceId}/${gettingStartedPageId}`);
       reset();
     } catch (error) {
       console.error("Onboarding submission error:", error);
-      toast.error("Failed to complete onboarding. Please try again.");
+      toast.error(`Failed to complete onboarding. Please try again.`);
     } finally {
       setIsSubmitting(false);
     }
