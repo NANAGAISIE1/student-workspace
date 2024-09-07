@@ -3,7 +3,7 @@ import { internalMutation, mutation, MutationCtx } from "../_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { Id } from "../_generated/dataModel";
 import { createWorkspace } from "../workspaces/mutation";
-import { pageTemplates } from "./constants";
+import { pageTemplates } from "../templates";
 
 export const onboarding = mutation({
   args: {
