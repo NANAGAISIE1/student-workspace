@@ -1,34 +1,53 @@
 import { NextResponse } from "next/server";
 import { apiAuthPrefix, DEFAULT_LOGIN_REDIRECT } from "./routes";
+import { fetchQuery } from "convex/nextjs";
 
 import {
   convexAuthNextjsMiddleware,
+  convexAuthNextjsToken,
   createRouteMatcher,
   isAuthenticatedNextjs,
   nextjsMiddlewareRedirect,
 } from "@convex-dev/auth/nextjs/server";
+import { api } from "@convex/api";
 
 const isLoginPage = createRouteMatcher(["/login", "/register"]);
 const isProtectedRoute = createRouteMatcher(["/app(.*)", "/onboarding(.*)"]);
+const workspaceRoute = createRouteMatcher(["/app(.*)"]);
 
 export default convexAuthNextjsMiddleware(async (request) => {
   const url = request.nextUrl;
-  const isLoggedIn = isAuthenticatedNextjs();
   const isApiAuthRoute = url.pathname.startsWith(apiAuthPrefix);
+  const isLoggedIn = isAuthenticatedNextjs();
 
   if (isApiAuthRoute) {
     return NextResponse.next();
   }
 
   if (isLoginPage(request)) {
-    if (isLoggedIn) {
-      return nextjsMiddlewareRedirect(request, DEFAULT_LOGIN_REDIRECT);
-    }
-    return NextResponse.next();
+    return isLoggedIn
+      ? nextjsMiddlewareRedirect(request, DEFAULT_LOGIN_REDIRECT)
+      : NextResponse.next();
   }
 
-  if (isProtectedRoute(request) && !isLoggedIn) {
-    return nextjsMiddlewareRedirect(request, "/login");
+  if (isProtectedRoute(request)) {
+    if (!isLoggedIn) {
+      return nextjsMiddlewareRedirect(request, "/login");
+    }
+
+    try {
+      const workspace = await fetchQuery(
+        api.workspaces.query.getMostCurrentWorkspace,
+        {},
+        { token: convexAuthNextjsToken() },
+      );
+      if (workspaceRoute(request) && workspace === null) {
+        return nextjsMiddlewareRedirect(request, "/onboarding");
+      }
+    } catch (error) {
+      console.error("Error fetching workspace", error);
+      return nextjsMiddlewareRedirect(request, "/login");
+    }
   }
 
   return NextResponse.next();

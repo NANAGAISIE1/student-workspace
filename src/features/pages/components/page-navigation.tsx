@@ -4,9 +4,11 @@ import { cn } from "@/lib/utils";
 import { Doc } from "@convex/dataModel";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRightIcon } from "lucide-react";
+import { ChevronRightIcon, PlusIcon } from "lucide-react";
 import { PageItem } from "./page-item";
 import { Id } from "../../../../convex/_generated/dataModel";
+import Hints from "@/components/hints";
+import { usePage } from "../hooks/use-page";
 
 const PageNavigation: React.FC<{
   data: Doc<"pages">[];
@@ -24,6 +26,8 @@ const PageNavigation: React.FC<{
     }
     return false;
   });
+
+  const { createPage } = usePage();
 
   const rootPages = isFavoriteSection
     ? data
@@ -43,13 +47,16 @@ const PageNavigation: React.FC<{
     <nav className="flex h-full w-full flex-col overflow-hidden">
       <span
         className={cn(
-          "group flex items-center rounded-md py-1 hover:bg-accent",
+          "group flex items-center justify-between rounded-md py-1 hover:bg-accent/30",
         )}
       >
         <Button
           variant="ghost"
           size="sm"
-          className={cn("p-1", !data && "invisible")}
+          className={cn(
+            "flex-1 space-x-2 p-1 hover:bg-accent/30",
+            !data && "invisible",
+          )}
           onClick={() => setOpen((prevOpen) => !prevOpen)}
         >
           <motion.span
@@ -59,10 +66,27 @@ const PageNavigation: React.FC<{
           >
             <ChevronRightIcon className="h-4 w-4" />
           </motion.span>
+          <p className="!mt-0 flex flex-grow items-center space-x-2 rounded-md py-1 text-sm font-semibold">
+            {title}
+          </p>
         </Button>
-        <p className="!mt-0 flex flex-grow items-center space-x-2 rounded-md py-1 text-sm font-semibold">
-          {title}
-        </p>
+        {!isFavoriteSection && (
+          <Hints
+            message="Add a page inside"
+            className="text-xs"
+            side="bottom"
+            align="center"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2 opacity-0 group-hover:opacity-100"
+              onClick={() => createPage(workspaceId)}
+            >
+              <PlusIcon className="size-4" />
+            </Button>
+          </Hints>
+        )}
       </span>
 
       <AnimatePresence initial={false}>

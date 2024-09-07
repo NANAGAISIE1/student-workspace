@@ -1,46 +1,47 @@
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type Props = {
-  currentStep: number;
+  step: number;
   prev: () => void;
   next: () => void;
   totalSteps: number;
+  isSubmitting: boolean;
+  isStepValid: boolean;
 };
 
-const OnboardingNavigation = ({
-  currentStep,
+const OnboardingNavigation: React.FC<Props> = ({
+  step,
   prev,
+  isSubmitting,
   next,
   totalSteps,
-}: Props) => {
+  isStepValid,
+}) => {
   const router = useRouter();
+
   return (
     <>
-      <div className="absolute inset-x-4 top-4 flex items-center justify-between">
+      <div className="absolute left-0 top-4 flex items-center justify-between">
         <Button
           variant="ghost"
           size="sm"
-          onClick={currentStep === 0 ? () => router.push("/app") : prev}
+          onClick={step === 0 ? () => router.push("/app") : prev}
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
-        <Button variant="ghost" size="sm" onClick={next}>
-          <ChevronRight className="h-4 w-4" />
-        </Button>
       </div>
-      <div className="absolute inset-x-64 bottom-20 flex items-center justify-between space-x-14">
+      <div className="absolute bottom-20 flex items-center justify-between space-x-14">
         <Button
-          variant="outline"
-          onClick={prev}
-          disabled={currentStep === 0}
-          className="w-full"
+          onClick={next}
+          disabled={isSubmitting || !isStepValid}
+          className="w-32 bg-vibrant-blue/80 text-accent-foreground hover:bg-vibrant-blue"
         >
-          Back
-        </Button>
-        <Button onClick={next} className="w-full">
-          {currentStep === totalSteps - 1 ? "Submit" : "Next"}
+          {isSubmitting && (
+            <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          {step === totalSteps - 1 ? "Submit" : "Next"}
         </Button>
       </div>
     </>

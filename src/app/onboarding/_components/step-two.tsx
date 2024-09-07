@@ -1,40 +1,23 @@
-import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { motion } from "framer-motion";
 import { Toggle } from "@/components/ui/toggle";
-import { useEffect, useState } from "react";
 import Image from "next/image";
-import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";
 import { onboardingWorkspaceInterests } from "@/features/workspaces/constants/onboarding";
+import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";
+import { StepComponentProps } from "../types";
 
-interface Step2Props {
-  register: UseFormRegister<OnboardingFormInputs>;
-  setValue: UseFormSetValue<OnboardingFormInputs>;
-  watch: any;
-  errors: FieldErrors<OnboardingFormInputs>;
-  delta: number;
-}
-
-const Step2: React.FC<Step2Props> = ({ register, setValue, watch, delta }) => {
-  const [selectedInterests, setSelectedInterests] = useState<
-    OnboardingFormInputs["interests"]
-  >([]);
-
-  useEffect(() => {
-    const interests = watch("interests") || [];
-    setSelectedInterests(interests);
-  }, [watch]);
+const Step2: React.FC<StepComponentProps> = ({
+  setValue,
+  watch,
+  delta,
+  errors,
+}) => {
+  const selectedInterests = watch("interests");
 
   const handleToggle = (value: OnboardingFormInputs["interests"][number]) => {
-    let updatedInterests;
-    if (selectedInterests.includes(value)) {
-      updatedInterests = selectedInterests.filter(
-        (interest) => interest !== value,
-      );
-    } else {
-      updatedInterests = [...selectedInterests, value];
-    }
-    setSelectedInterests(updatedInterests);
-    setValue("interests", updatedInterests); // Set the form value programmatically
+    const updatedInterests = selectedInterests.includes(value)
+      ? selectedInterests.filter((interest) => interest !== value)
+      : [...selectedInterests, value];
+    setValue("interests", updatedInterests, { shouldValidate: true });
   };
 
   return (
@@ -48,25 +31,26 @@ const Step2: React.FC<Step2Props> = ({ register, setValue, watch, delta }) => {
         <div className="flex flex-col items-center justify-center space-y-2">
           <h2>What are your interests?</h2>
           <p className="!mt-0 text-xl text-muted-foreground">
-            Select as many as you like
+            Select at least one option
           </p>
         </div>
         <div className="flex flex-wrap gap-6">
           {onboardingWorkspaceInterests.map((interest) => (
             <Toggle
               key={interest.type}
-              value={interest.type}
-              variant={"outline"}
-              className={`flex h-16 w-40 items-center p-2 ${
-                selectedInterests.includes(interest.type) ? "bg-muted" : ""
-              }`}
-              onClick={() => handleToggle(interest.type)}
+              pressed={selectedInterests.includes(interest.type)}
+              onPressedChange={() => handleToggle(interest.type)}
+              variant="outline"
+              className="flex h-16 w-40 items-center p-2"
             >
               {interest.icon}
               {interest.title}
             </Toggle>
           ))}
         </div>
+        {errors.interests && (
+          <p className="text-red-500">{errors.interests.message}</p>
+        )}
       </div>
       <div className="flex items-center justify-end">
         <Image

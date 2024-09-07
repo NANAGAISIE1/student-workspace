@@ -1,14 +1,16 @@
 "use client";
+
+import { useOnboardingForm } from "@/features/workspaces/hooks/onboarding";
+import OnboardingNavigation from "./navigations";
+import { StepComponentProps } from "../types";
 import Step1 from "./step-one";
 import Step2 from "./step-two";
-import OnboardingNavigation from "./navigations";
-import { useOnboardingForm } from "@/features/workspaces/hooks/onboarding";
 
-const stepComponents = [Step1, Step2];
+const stepComponents: React.FC<StepComponentProps>[] = [Step1, Step2];
 
 export default function Onboarding() {
   const {
-    currentStep,
+    step,
     totalSteps,
     delta,
     register,
@@ -17,19 +19,25 @@ export default function Onboarding() {
     setValue,
     errors,
     next,
+    isSubmitting,
     prev,
     processForm,
   } = useOnboardingForm(stepComponents.length);
 
-  const StepComponent = stepComponents[currentStep];
+  const StepComponent = stepComponents[step];
+
+  const isStepValid =
+    step === 0 ? !!watch("workspaceType") : watch("interests").length > 0;
 
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-center space-y-6">
       <OnboardingNavigation
-        currentStep={currentStep}
+        step={step}
         prev={prev}
         next={next}
         totalSteps={totalSteps}
+        isSubmitting={isSubmitting}
+        isStepValid={isStepValid}
       />
       <form onSubmit={handleSubmit(processForm)} className="w-[80%]">
         <StepComponent

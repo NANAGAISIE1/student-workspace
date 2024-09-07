@@ -149,7 +149,6 @@ export const usePage = () => {
     }
 
     if (toggleArchivePageId) {
-      toast.success("Page moved to trash", { id: toastId });
       return toggleArchivePageId;
     }
   };

@@ -1,37 +1,20 @@
-import { UseFormRegister, FieldErrors, UseFormSetValue } from "react-hook-form";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { useEffect, useState } from "react";
-import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";
+import Image from "next/image";
 import { onboardingWorkspacesTypes } from "@/features/workspaces/constants/onboarding";
+import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";
+import { StepComponentProps } from "../types";
 
-interface Step1Props {
-  register: UseFormRegister<OnboardingFormInputs>;
-  setValue: UseFormSetValue<OnboardingFormInputs>;
-  errors: FieldErrors<OnboardingFormInputs>;
-  delta: number;
-  watch: any;
-}
-
-const Step1: React.FC<Step1Props> = ({
+const Step1: React.FC<StepComponentProps> = ({
   setValue,
-
-  delta,
   watch,
+  delta,
+  errors,
 }) => {
-  const [selectedOrgType, setSelectedOrgType] = useState<
-    OnboardingFormInputs["workspaceType"] | null
-  >(null);
-
-  useEffect(() => {
-    const workspaceType = watch("workspaceType");
-    if (workspaceType) setSelectedOrgType(workspaceType);
-  }, [watch]);
+  const workspaceType = watch("workspaceType");
 
   const handleToggle = (value: OnboardingFormInputs["workspaceType"]) => {
-    setSelectedOrgType(value);
-    setValue("workspaceType", value); // Set the form value programmatically
+    setValue("workspaceType", value, { shouldValidate: true });
   };
 
   return (
@@ -47,15 +30,18 @@ const Step1: React.FC<Step1Props> = ({
           This helps us tailor your experience
         </p>
       </div>
-      <ToggleGroup type="single">
+      <ToggleGroup
+        type="single"
+        value={workspaceType}
+        onValueChange={handleToggle}
+      >
         {onboardingWorkspacesTypes.map((workspace) => (
           <ToggleGroupItem
             key={workspace.type}
             value={workspace.type}
             className={`flex size-72 w-full flex-col p-3 ${
-              selectedOrgType === workspace.type ? "bg-muted" : ""
+              workspaceType === workspace.type ? "bg-muted" : ""
             }`}
-            onClick={() => handleToggle(workspace.type)}
           >
             <Image
               src={workspace.image}
@@ -68,6 +54,9 @@ const Step1: React.FC<Step1Props> = ({
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
+      {errors.workspaceType && (
+        <p className="text-red-500">{errors.workspaceType.message}</p>
+      )}
     </motion.div>
   );
 };

@@ -60,25 +60,35 @@ export const getWorkspaces = query({
   },
 });
 
-export const getMostCurrentWordspace = query({
+export const getMostCurrentWorkspace = query({
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       return null;
     }
 
-    const member = await ctx.db
+    const members = await ctx.db
       .query("workspaceMembers")
       .withIndex("by_user_id", (q) => q.eq("userId", userId))
-      .first();
+      .collect();
 
-    if (!member) {
+    if (members.length === 0) {
       return null;
     }
 
-    const workspace = await ctx.db.get(member.workspaceId);
+    // Sort workspaces by last updated time
+    const workspaces = await Promise.all(
+      members.map(async (member) => {
+        const workspace = await ctx.db.get(member.workspaceId);
+        return workspace;
+      }),
+    );
 
-    return workspace;
+    const sortedWorkspaces = workspaces
+      .filter((w): w is NonNullable<typeof w> => w !== null)
+      .sort((a, b) => b.updatedAt - a.updatedAt);
+
+    return sortedWorkspaces[0] || null;
   },
 });
 

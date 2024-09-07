@@ -20,8 +20,8 @@ const Workspace = ({ id }: Props) => {
   const { workspaceId: storedId, setCurrentWorkspaceId } = useWorkspaceStore(
     (state) => state,
   );
-  const { data: fetchedWorkspaceId, isPending } = useQueryWithStatus(
-    api.workspaces.query.getMostCurrentWordspace,
+  const { data: fetchedWorkspace, isPending } = useQueryWithStatus(
+    api.workspaces.query.getMostCurrentWorkspace,
     {},
   );
 
@@ -36,14 +36,14 @@ const Workspace = ({ id }: Props) => {
   }
 
   // Determine the workspace ID to use
-  const workspaceId = id?.[0] || storedId || fetchedWorkspaceId?._id;
+  const workspaceId = id?.[0] || storedId || fetchedWorkspace?._id;
 
   // Update the Zustand store if the workspace ID was fetched from the database
   useEffect(() => {
-    if (fetchedWorkspaceId && !storedId) {
-      setCurrentWorkspaceId(fetchedWorkspaceId._id);
+    if (fetchedWorkspace && !storedId) {
+      setCurrentWorkspaceId(fetchedWorkspace._id);
     }
-  }, [fetchedWorkspaceId, storedId, setCurrentWorkspaceId]);
+  }, [fetchedWorkspace, storedId, setCurrentWorkspaceId]);
 
   if (!workspaceId || !user) {
     return (
