@@ -98,6 +98,22 @@ const schema = defineSchema({
   })
     .index("by_creator", ["creatorId"])
     .index("by_page", ["pageId"]),
+  pageTemplates: defineTable({
+    title: v.string(),
+    type: v.union(
+      v.literal("notes"),
+      v.literal("research"),
+      v.literal("site"),
+      v.literal("gettingStarted"),
+    ),
+    emoji: v.string(),
+    pageType: v.union(
+      v.literal("page"),
+      v.literal("todo"),
+      v.literal("calendar"),
+    ),
+    content: v.string(),
+  }).index("by_type", ["type"]),
 });
 
 export default schema;

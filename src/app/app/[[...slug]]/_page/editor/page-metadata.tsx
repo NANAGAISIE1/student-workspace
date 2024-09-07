@@ -25,7 +25,7 @@ const PageMetadata = ({ pageTitle, pageId }: Props) => {
   }, [pageTitle]);
 
   return (
-    <div>
+    <div className="px-[10rem]">
       <Input
         value={title}
         onChange={handleTitleChange}
