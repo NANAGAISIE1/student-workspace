@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Toggle } from "@/components/ui/toggle";
+import { Toggle } from "@/components/shadcn-ui/toggle";
 import Image from "next/image";
 import { onboardingWorkspaceInterests } from "@/features/workspaces/constants/onboarding";
 import { OnboardingFormInputs } from "@/features/workspaces/types/onboarding-form-schema";

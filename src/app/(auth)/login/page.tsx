@@ -1,4 +1,4 @@
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/shadcn-ui/button";
 import Link from "next/link";
 import { SignInCard } from "@/features/auth/components/login";
 

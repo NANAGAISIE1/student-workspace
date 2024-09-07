@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { Trash2Icon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { Separator } from "@/components/shadcn-ui/separator";
 import { useEffect, useState } from "react";
 import {
   Command,
@@ -9,12 +9,12 @@ import {
   CommandInput,
   CommandList,
   CommandGroup,
-} from "@/components/ui/command";
+} from "@/components/shadcn-ui/command";
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
+} from "@/components/shadcn-ui/popover";
 import TrashList from "./trash-list";
 import { useQueryWithStatus } from "@/services/convex-query";
 import { api } from "@convex/api";

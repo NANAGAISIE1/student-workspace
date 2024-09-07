@@ -1,6 +1,6 @@
 "use client";
 import { UserProfileMenu } from "./user-profile-dropdown-menu";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/shadcn-ui/button";
 import {
   ArrowLeftToLineIcon,
   HomeIcon,

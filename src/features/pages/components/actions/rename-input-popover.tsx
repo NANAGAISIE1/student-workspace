@@ -3,10 +3,10 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
+} from "@/components/shadcn-ui/popover";
+import { Input } from "@/components/shadcn-ui/input";
 import { NotebookPenIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { useDebounceFull } from "@/hooks/use-debounce";
 
 interface RenameInputPopoverProps {

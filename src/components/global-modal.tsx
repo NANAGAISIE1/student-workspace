@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
-import { Dialog } from "@/components/ui/dialog";
-import { CommandDialog } from "./ui/command";
+import { Dialog } from "@/components/shadcn-ui/dialog";
+import { CommandDialog } from "./shadcn-ui/command";
 
 interface Modal {
   id: string;

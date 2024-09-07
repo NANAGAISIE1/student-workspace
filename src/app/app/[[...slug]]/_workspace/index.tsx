@@ -3,7 +3,12 @@ import { api } from "@convex/api";
 import { Id } from "@convex/dataModel";
 import { Check, Loader2Icon } from "lucide-react";
 import { Timeline } from "./calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/shadcn-ui/card";
 import { useWorkspaceStore } from "./current-workspace-store";
 import { useQueryWithStatus } from "@/services/convex-query";
 import { useEffect } from "react";

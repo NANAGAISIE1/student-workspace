@@ -1,12 +1,12 @@
 "use client";
 
 import { useModalStore } from "@/components/global-modal";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import SearchCommandModal from "./search-command-modal";
 import { SearchIcon } from "lucide-react";
-import { DialogContent } from "@/components/ui/dialog";
+import { DialogContent } from "@/components/shadcn-ui/dialog";
 import { useWorkspaceStore } from "../store/workspace-store";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/shadcn-ui/skeleton";
 
 export default function SearchDialog() {
   const openModal = useModalStore((state) => state.openModal);

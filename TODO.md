@@ -6,11 +6,10 @@ Project Description
 
 ### Todo
 
-- [ ] Events view  
+- [ ] Make a custom slash menu
+- [ ] Create a custom toggle block
+- [ ] Create a custom pdf block
 
 ### In Progress
 
-
 ### Done ✓
-
-

@@ -1,5 +1,5 @@
 "use client";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/shadcn-ui/skeleton";
 import PageNavigation from "@/features/pages/components/page-navigation";
 import { useWorkspaceStore } from "@/features/workspaces/store/workspace-store";
 import { Id } from "@convex/dataModel";

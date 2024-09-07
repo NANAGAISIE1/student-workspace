@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRightIcon, File, PlusIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import { cn } from "@/lib/utils";
 import { PageItemActions } from "@/features/pages/components/actions/item-actions";
 import { PageItemProps } from "../types/page-list";

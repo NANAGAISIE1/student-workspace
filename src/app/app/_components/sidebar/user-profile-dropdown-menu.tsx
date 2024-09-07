@@ -1,7 +1,7 @@
 "use client";
 import { PlusSquareIcon, XCircle } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/shadcn-ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,11 +14,15 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/shadcn-ui/dropdown-menu";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/shadcn-ui/avatar";
 import { useRouter } from "next/navigation";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/shadcn-ui/skeleton";
 import { useUser } from "@/features/auth/api/users";
 import { useWorkspace } from "@/features/workspaces/hooks/use-workspace";
 import { toast } from "sonner";
@@ -42,7 +46,7 @@ export function UserProfileMenu() {
         <Button
           variant="ghost"
           size={"sm"}
-          className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
+          className="hover:bg-background-lighter flex flex-1 items-center justify-start space-x-2 truncate pr-0"
         >
           <Skeleton className="h-6 w-6 rounded-lg" />
           <Skeleton className="h-6 w-full" />
@@ -54,7 +58,7 @@ export function UserProfileMenu() {
               <Button
                 variant="ghost"
                 size={"sm"}
-                className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
+                className="hover:bg-background-lighter flex flex-1 items-center justify-start space-x-2 truncate pr-0"
               >
                 <Avatar className="h-6 w-6 rounded-lg">
                   <AvatarImage src={user.image} />
