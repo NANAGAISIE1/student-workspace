@@ -61,7 +61,7 @@ const ImageBanner = ({ preloadedPage }: Props) => {
                   width={400}
                   alt={image.url}
                   height={400}
-                  className="h-[200px] w-full object-cover"
+                  className="h-52 w-full object-cover"
                 />
               </div>
             ) : (

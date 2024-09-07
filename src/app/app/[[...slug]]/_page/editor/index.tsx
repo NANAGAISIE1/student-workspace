@@ -66,7 +66,7 @@ export default function WorkspaceEditor({ preloadedPage }: Props) {
 
   // Renders the editor instance using a React component.
   return (
-    <div className="h-full w-full flex-col space-y-8">
+    <div className="h-full w-full flex-col">
       <BlockNoteView
         editor={editor}
         data-theming-css-student-workspace
