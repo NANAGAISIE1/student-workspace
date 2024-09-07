@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build:production": "bunx convex deploy --cmd 'bun run build'",
+    "build:development": "bun run build",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

@@ -3,5 +3,5 @@
 if [[ $VERCEL_ENV == "production"  ]] ; then
   bun run build:production
 else
-  bun run build
+  bun run build:development
 fi
