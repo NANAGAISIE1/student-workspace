@@ -19,6 +19,9 @@ import type * as auth_password_reset_email from "../auth/password_reset/email.js
 import type * as auth_password_reset_otp from "../auth/password_reset/otp.js";
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
+import type * as images_example_images from "../images/example_images.js";
+import type * as images_mutations from "../images/mutations.js";
+import type * as images_query from "../images/query.js";
 import type * as pages_helpers from "../pages/helpers.js";
 import type * as pages_mutation from "../pages/mutation.js";
 import type * as pages_query from "../pages/query.js";
@@ -48,6 +51,9 @@ declare const fullApi: ApiFromModules<{
   "auth/password_reset/otp": typeof auth_password_reset_otp;
   auth: typeof auth;
   http: typeof http;
+  "images/example_images": typeof images_example_images;
+  "images/mutations": typeof images_mutations;
+  "images/query": typeof images_query;
   "pages/helpers": typeof pages_helpers;
   "pages/mutation": typeof pages_mutation;
   "pages/query": typeof pages_query;

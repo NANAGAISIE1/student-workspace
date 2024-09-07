@@ -52,6 +52,7 @@ const schema = defineSchema({
     workspaceId: v.id("workspaces"),
     creatorId: v.id("users"),
     content: v.optional(v.string()),
+    imageBanner: v.optional(v.id("bannerImages")),
     emoji: v.optional(v.string()),
     updatedAt: v.number(),
     type: v.optional(
@@ -114,6 +115,10 @@ const schema = defineSchema({
     ),
     content: v.string(),
   }).index("by_type", ["type"]),
+  bannerImages: defineTable({
+    url: v.string(),
+    creatorId: v.optional(v.id("users")),
+  }).index("by_creator", ["creatorId"]),
 });
 
 export default schema;

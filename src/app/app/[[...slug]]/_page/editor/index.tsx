@@ -1,5 +1,4 @@
 "use client";
-
 import "@blocknote/core/fonts/inter.css";
 import {
   BasicTextStyleButton,
@@ -28,7 +27,6 @@ import {
   filterSuggestionItems,
 } from "@blocknote/core";
 import { getCustomSlashMenuItems } from "./custom-slash-menu";
-import PageMetadata from "./page-metadata";
 
 type Props = {
   preloadedPage: Preloaded<typeof api.pages.query.getPageById>;
@@ -68,8 +66,7 @@ export default function WorkspaceEditor({ preloadedPage }: Props) {
 
   // Renders the editor instance using a React component.
   return (
-    <div className="h-full w-full flex-col space-y-8">
-      <PageMetadata pageId={page._id} pageTitle={page.title} />
+    <div className="h-full w-full flex-col">
       <BlockNoteView
         editor={editor}
         data-theming-css-student-workspace
