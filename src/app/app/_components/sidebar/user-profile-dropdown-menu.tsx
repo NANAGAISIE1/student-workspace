@@ -27,9 +27,11 @@ import { useUser } from "@/features/auth/api/users";
 import { useWorkspace } from "@/features/workspaces/hooks/use-workspace";
 import { toast } from "sonner";
 import { WorkspaceSelector } from "./workspace-selector";
+import { useWorkspaceStore } from "@/features/workspaces/store/workspace-store";
 
 export function UserProfileMenu() {
   const { signOut } = useAuthActions();
+  const { setCurrentWorkspaceId } = useWorkspaceStore();
   const { user, isLoading } = useUser();
   const router = useRouter();
   const { getWorkspaces } = useWorkspace();
@@ -46,7 +48,7 @@ export function UserProfileMenu() {
         <Button
           variant="ghost"
           size={"sm"}
-          className="hover:bg-background-lighter flex flex-1 items-center justify-start space-x-2 truncate pr-0"
+          className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
         >
           <Skeleton className="h-6 w-6 rounded-lg" />
           <Skeleton className="h-6 w-full" />
@@ -58,7 +60,7 @@ export function UserProfileMenu() {
               <Button
                 variant="ghost"
                 size={"sm"}
-                className="hover:bg-background-lighter flex flex-1 items-center justify-start space-x-2 truncate pr-0"
+                className="flex flex-1 items-center justify-start space-x-2 truncate pr-0 hover:bg-background-lighter"
               >
                 <Avatar className="h-6 w-6 rounded-lg">
                   <AvatarImage src={user.image} />
@@ -82,7 +84,12 @@ export function UserProfileMenu() {
                         <PlusSquareIcon className="mr-2 h-4 w-4" />
                         <span>Join or create workspace</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={async () => await signOut()}>
+                      <DropdownMenuItem
+                        onClick={async () => {
+                          await signOut();
+                          setCurrentWorkspaceId(undefined);
+                        }}
+                      >
                         <XCircle className="mr-2 h-4 w-4" />
                         <span>Log out</span>
                       </DropdownMenuItem>
