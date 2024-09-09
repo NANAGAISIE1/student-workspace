@@ -66,17 +66,14 @@ export const usePage = () => {
     workspace,
     error: getCurrentWorkspaceError,
     isError: isGetCurrentWorkspaceError,
-    isPending: isGetCurrentWorkspacePending,
   } = useGetMostCurrentWorkspace();
 
   if (storedWorkspaceId === undefined) {
-    if (isGetCurrentWorkspacePending) {
-      toast.loading("Getting workspace...");
-    }
     if (isGetCurrentWorkspaceError) {
       console.error(getCurrentWorkspaceError);
       toast.error("Failed to get workspace");
     }
+
     if (workspace) {
       setCurrentWorkspaceId(workspace._id);
     }

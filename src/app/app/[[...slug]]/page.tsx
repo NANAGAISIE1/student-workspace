@@ -2,6 +2,11 @@ import { Id } from "@convex/dataModel";
 import Workspace from "./_workspace";
 import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
 import dynamic from "next/dynamic";
+import { fetchQuery } from "convex/nextjs";
+import { api } from "@convex/api";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { redirect } from "next/navigation";
+import { Loader2Icon } from "lucide-react";
 
 const Page = dynamic(() => import("./_page"), { ssr: false });
 
@@ -24,6 +29,25 @@ const Home = ({
   } else {
     workspaceId = params.slug;
     documentId = undefined;
+  }
+
+  const user = fetchQuery(
+    api.user.query.getCurrentUser,
+    {},
+    { token: convexAuthNextjsToken() },
+  );
+
+  if (user === undefined) {
+    return (
+      <div className="flex h-full w-full items-center justify-center overflow-hidden">
+        <Loader2Icon className="h-8 w-8 animate-spin" />
+        <p>Loading workspace</p>
+      </div>
+    );
+  }
+
+  if (user === null) {
+    redirect("/login");
   }
 
   if (documentId) {
