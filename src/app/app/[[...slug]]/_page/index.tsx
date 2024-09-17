@@ -1,7 +1,7 @@
 import { Id } from "@convex/dataModel";
 import { preloadQuery } from "convex/nextjs";
 import { api } from "@convex/api";
-import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+// import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import dynamic from "next/dynamic";
 import ImageBanner from "./editor/image-banner";
 import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
@@ -18,7 +18,7 @@ const Page = async ({ id }: Props) => {
     {
       pageId: id,
     },
-    { token: convexAuthNextjsToken() },
+    // { token: convexAuthNextjsToken() },
   );
 
   return (
