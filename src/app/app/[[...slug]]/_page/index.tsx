@@ -3,7 +3,6 @@ import { preloadQuery } from "convex/nextjs";
 import { api } from "@convex/api";
 // import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import dynamic from "next/dynamic";
-import ImageBanner from "./editor/image-banner";
 import { ScrollArea } from "@/components/shadcn-ui/scroll-area";
 
 type Props = {
@@ -11,6 +10,9 @@ type Props = {
 };
 
 const WorkspaceEditor = dynamic(() => import("./editor"), { ssr: false });
+const ImageBanner = dynamic(() => import("./editor/image-banner"), {
+  ssr: false,
+});
 
 const Page = async ({ id }: Props) => {
   const preloadedPage = await preloadQuery(

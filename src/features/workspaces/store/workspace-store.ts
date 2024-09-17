@@ -4,7 +4,7 @@ import { createJSONStorage, persist, StateStorage } from "zustand/middleware";
 
 type WorkspaceStore = {
   workspaceId: Id<"workspaces"> | undefined;
-  setCurrentWorkspaceId: (workspace: Id<"workspaces">) => void;
+  setCurrentWorkspaceId: (workspace: Id<"workspaces"> | undefined) => void;
 };
 
 const storage: StateStorage = {

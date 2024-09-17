@@ -8,28 +8,50 @@ type PageStore = {
 };
 
 const storage: StateStorage = {
-  getItem: (name: string) => {
-    const str = localStorage.getItem(name);
-    if (!str) return null;
-    return JSON.parse(str);
+  getItem: (name: string): string | null => {
+    try {
+      const str = localStorage.getItem(name);
+      return str ? JSON.parse(str) : null;
+    } catch (error) {
+      console.error(`Error retrieving ${name} from localStorage:`, error);
+      return null;
+    }
   },
-  setItem: (name: string, value: unknown) => {
-    localStorage.setItem(name, JSON.stringify(value));
+  setItem: (name: string, value: unknown): void => {
+    try {
+      localStorage.setItem(name, JSON.stringify(value));
+    } catch (error) {
+      console.error(`Error setting ${name} in localStorage:`, error);
+    }
   },
-  removeItem: (name: string) => localStorage.removeItem(name),
+  removeItem: (name: string): void => {
+    try {
+      localStorage.removeItem(name);
+    } catch (error) {
+      console.error(`Error removing ${name} from localStorage:`, error);
+    }
+  },
+};
+
+const getUniqueName = (): string => {
+  if (typeof window !== "undefined") {
+    return `page-drop-down-state-${window.location.pathname}`;
+  }
+  return "page-drop-down-state-default";
 };
 
 export const usePageStore = create<PageStore>()(
   persist(
     (set) => ({
-      isPageDropdownOpen: true, // This will be overwritten by the persisted value if it exists
+      isPageDropdownOpen: true,
       togglePageDropdown: () =>
         set((state) => ({ isPageDropdownOpen: !state.isPageDropdownOpen })),
       ensureOpen: () => set({ isPageDropdownOpen: true }),
     }),
     {
-      name: "page-drop-down-state", // name of the item in the storage (must be unique)
+      name: getUniqueName(),
       storage: createJSONStorage(() => storage),
+      partialize: (state) => ({ isPageDropdownOpen: state.isPageDropdownOpen }),
     },
   ),
 );
